@@ -1,0 +1,28 @@
+@EducAR.API_HostAddress = http://localhost:5213
+
+GET {{EducAR.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+### MATRICULAS - alumnos disponibles para matricular
+GET {{EducAR.API_HostAddress}}/api/Matriculas/alumnos-disponibles?anioRegistro=2026&idCicloLectivo=1&Pagina=1&Cantidad=25
+Authorization: Bearer {{token}}
+
+### MATRICULAS - asignacion masiva
+POST {{EducAR.API_HostAddress}}/api/Matriculas/asignar-masivo
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "idCurso": 1,
+  "idsAlumnos": [1, 2, 3]
+}
+
+### MATRICULAS - listar por curso
+GET {{EducAR.API_HostAddress}}/api/Matriculas/curso/1
+Authorization: Bearer {{token}}
+
+### MATRICULAS - listar por alumno
+GET {{EducAR.API_HostAddress}}/api/Matriculas/alumno/1
+Authorization: Bearer {{token}}

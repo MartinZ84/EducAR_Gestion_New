@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/EducAR_Tests/">
+    <Project Path="EducAR_Tests/EducAR.Tests.csproj" />
+  </Folder>
+  <Project Path="EducAR.API/EducAR.API.csproj" />
+</Solution>

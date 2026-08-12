@@ -1,0 +1,17 @@
+# Archivos de compilación .NET
+**/bin/
+**/obj/
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# .NET
+**/bin/
+**/obj/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
