@@ -99,7 +99,7 @@ public class AlumnosControllerTests
     public async Task Crear_DatosValidos_Retorna201()
     {
         // Arrange
-        var dto    = new AlumnoCreateDto { Dni = 40000001, Nombre = "Juan", Apellido = "García", FecNac = new DateOnly(2014, 1, 1) };
+        var dto    = new AlumnoCreateDto { Dni = 40000001, Nombre = "Juan", Apellido = "García", FechaNacimiento = new DateTime(2014, 1, 1) };
         var alumno = new AlumnoResponseDto { IdAlumno = 1, Nombre = "Juan", Apellido = "García" };
 
         _serviceMock.Setup(s => s.Crear(dto, 1))
@@ -116,7 +116,7 @@ public class AlumnosControllerTests
     public async Task Crear_DniDuplicado_Retorna400()
     {
         // Arrange
-        var dto = new AlumnoCreateDto { Dni = 12345678, Nombre = "Juan", Apellido = "García", FecNac = new DateOnly(2014, 1, 1) };
+        var dto = new AlumnoCreateDto { Dni = 12345678, Nombre = "Juan", Apellido = "García", FechaNacimiento = new DateTime(2014, 1, 1) };
 
         _serviceMock.Setup(s => s.Crear(dto, 1))
                     .ReturnsAsync((false, "Ya existe un alumno con ese DNI en esta escuela.", (AlumnoResponseDto?)null));

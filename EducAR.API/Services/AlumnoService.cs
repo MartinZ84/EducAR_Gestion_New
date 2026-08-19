@@ -30,7 +30,7 @@ public class AlumnoService : IAlumnoService
 
     public async Task<(bool exito, string mensaje, AlumnoResponseDto? alumno)> Crear(AlumnoCreateDto dto, int idEscuela)
     {
-        if (dto.FecNac == default || dto.FecNac > DateOnly.FromDateTime(DateTime.Today))
+        if (dto.FechaNacimiento == default || dto.FechaNacimiento > DateTime.Today)
             return (false, "La fecha de nacimiento no es válida.", null);
 
         if (await _alumnoRepository.ExisteDni(dto.Dni, idEscuela))
@@ -39,11 +39,18 @@ public class AlumnoService : IAlumnoService
         var alumno = new Alumno
         {
             IdEscuela = idEscuela,
-            Dni       = dto.Dni,
-            Nombre    = dto.Nombre,
-            Apellido  = dto.Apellido,
-            FecNac    = dto.FecNac,
-            Activo    = true
+            Dni = dto.Dni,
+            Nombre = dto.Nombre,
+            Apellido = dto.Apellido,
+            FechaNacimiento = dto.FechaNacimiento,
+            Activo = true,
+            Calle = dto.Calle,
+            Numero = dto.Numero,
+            Piso = dto.Piso,
+            Departamento = dto.Departamento,
+            Barrio = dto.Barrio,
+            Localidad = dto.Localidad,
+            Provincia = dto.Provincia,
         };
 
         await _alumnoRepository.Crear(alumno);
@@ -52,17 +59,25 @@ public class AlumnoService : IAlumnoService
 
     public async Task<(bool exito, string mensaje)> Actualizar(int idAlumno, int idEscuela, AlumnoUpdateDto dto)
     {
-        if (dto.FecNac == default || dto.FecNac > DateOnly.FromDateTime(DateTime.Today))
+        if (dto.FechaNacimiento == default || dto.FechaNacimiento > DateTime.Today)
             return (false, "La fecha de nacimiento no es válida.");
 
         var alumno = await _alumnoRepository.ObtenerPorId(idAlumno, idEscuela);
         if (alumno is null)
             return (false, "Alumno no encontrado.");
 
-        alumno.Nombre   = dto.Nombre;
+        alumno.Nombre = dto.Nombre;
         alumno.Apellido = dto.Apellido;
-        alumno.FecNac   = dto.FecNac;
-        alumno.Activo   = dto.Activo;
+        alumno.FechaNacimiento = dto.FechaNacimiento;
+        alumno.Activo = dto.Activo;
+        alumno.FechaNacimiento = dto.FechaNacimiento;
+        alumno.Calle = dto.Calle;
+        alumno.Numero = dto.Numero;
+        alumno.Piso = dto.Piso;
+        alumno.Departamento = dto.Departamento;
+        alumno.Barrio = dto.Barrio;
+        alumno.Localidad = dto.Localidad;
+        alumno.Provincia = dto.Provincia;
 
         await _alumnoRepository.Actualizar(alumno);
         return (true, "Alumno actualizado correctamente.");
@@ -92,8 +107,8 @@ public class AlumnoService : IAlumnoService
             if (asociacion.Activo)
                 return (false, "El tutor ya está asociado a ese alumno.");
 
-            asociacion.Activo             = true;
-            asociacion.Parentesco         = dto.Parentesco;
+            asociacion.Activo = true;
+            asociacion.Parentesco = dto.Parentesco;
             asociacion.EsResponsablePrinc = dto.EsResponsablePrinc;
             await _alumnoRepository.GuardarCambios();
             return (true, "Tutor reasociado al alumno correctamente.");
@@ -101,11 +116,11 @@ public class AlumnoService : IAlumnoService
 
         var nueva = new AlumnoTutor
         {
-            IdAlumno           = idAlumno,
-            IdTutor            = dto.IdTutor,
-            Parentesco         = dto.Parentesco,
+            IdAlumno = idAlumno,
+            IdTutor = dto.IdTutor,
+            Parentesco = dto.Parentesco,
             EsResponsablePrinc = dto.EsResponsablePrinc,
-            Activo             = true
+            Activo = true
         };
 
         await _alumnoRepository.AsociarTutor(nueva);
@@ -131,11 +146,11 @@ public class AlumnoService : IAlumnoService
         var queryDto = query.Select(a => new AlumnoResponseDto
         {
             IdAlumno = a.IdAlumno,
-            Nombre   = a.Nombre,
+            Nombre = a.Nombre,
             Apellido = a.Apellido,
-            Dni      = a.Dni,
-            FecNac   = a.FecNac,
-            Activo   = a.Activo
+            Dni = a.Dni,
+            FechaNacimiento = a.FechaNacimiento,
+            Activo = a.Activo
         });
 
         return await PaginacionHelper.PaginarAsync(queryDto, filtro.Pagina, filtro.Cantidad);
@@ -144,11 +159,11 @@ public class AlumnoService : IAlumnoService
     private static AlumnoResponseDto MapearAResponseDto(Alumno a) => new()
     {
         IdAlumno = a.IdAlumno,
-        Dni      = a.Dni,
-        Nombre   = a.Nombre,
+        Dni = a.Dni,
+        Nombre = a.Nombre,
         Apellido = a.Apellido,
-        FecNac   = a.FecNac,
-        Activo   = a.Activo,
+        FechaNacimiento = a.FechaNacimiento,
+        Activo = a.Activo,
         Matriculas = a.Matriculas?.Select(m => new AlumnoMatriculaDto
         {
             IdMatricula = m.IdMatricula,
@@ -162,15 +177,15 @@ public class AlumnoService : IAlumnoService
             FechaMatricula = m.FechaMatricula,
             FechaBaja = m.FechaBaja
         }).ToList() ?? new(),
-        Tutores  = a.AlumnoTutores?.Select(at => new AlumnoTutorDto
+        Tutores = a.AlumnoTutores?.Select(at => new AlumnoTutorDto
         {
-            IdAlumnoTutor      = at.IdAlumnoTutor,
-            IdTutor            = at.IdTutor,
-            Nombre             = at.Tutor.Usuario.Nombre,
-            Apellido           = at.Tutor.Usuario.Apellido,
-            Parentesco         = at.Parentesco,
+            IdAlumnoTutor = at.IdAlumnoTutor,
+            IdTutor = at.IdTutor,
+            Nombre = at.Tutor.Usuario.Nombre,
+            Apellido = at.Tutor.Usuario.Apellido,
+            Parentesco = at.Parentesco,
             EsResponsablePrinc = at.EsResponsablePrinc,
-            Activo             = at.Activo
+            Activo = at.Activo
         }).ToList() ?? new()
     };
 }

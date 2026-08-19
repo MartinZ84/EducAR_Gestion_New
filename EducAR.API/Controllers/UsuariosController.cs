@@ -29,11 +29,24 @@ public class UsuariosController : ControllerBase
     //     var usuarios = await _usuarioService.ObtenerTodos(IdEscuelaActual);
     //     return Ok(usuarios);
     // }
+    // [HttpGet]
+    // [Authorize(Roles = "Administrador")]
+    // public async Task<IActionResult> ObtenerTodos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
+    // {
+    //     var resultado = await _usuarioService.ObtenerTodosPaginado(IdEscuelaActual, pagina, cantidad);
+    //     return Ok(resultado);
+    // }
+
     [HttpGet]
     [Authorize(Roles = "Administrador")]
-    public async Task<IActionResult> ObtenerTodos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
+    public async Task<IActionResult> ObtenerTodos(
+    [FromQuery] int pagina = 1,
+    [FromQuery] int cantidad = 10,
+    [FromQuery] string? nombre = null,
+    [FromQuery] string? apellido = null,
+    [FromQuery] int? dni = null)
     {
-        var resultado = await _usuarioService.ObtenerTodosPaginado(IdEscuelaActual, pagina, cantidad);
+        var resultado = await _usuarioService.ObtenerTodosPaginado(IdEscuelaActual, pagina, cantidad, nombre, apellido, dni);
         return Ok(resultado);
     }
 

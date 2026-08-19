@@ -54,7 +54,7 @@ public class MatriculasControllerTests
                     Dni = 40123456,
                     Apellido = "Pérez",
                     Nombre = "Juan",
-                    FecNac = new DateOnly(2014, 3, 12)
+                    FecNac = new DateTime(2014, 3, 12)
                 }
             }
         };

@@ -21,7 +21,7 @@ public class MatriculaRepository : IMatriculaRepository
             .OrderBy(m => m.Alumno.Apellido)
             .ThenBy(m => m.Alumno.Nombre)
             .ThenBy(m => m.Alumno.Dni)
-            .ThenBy(m => m.Alumno.FecNac)
+            .ThenBy(m => m.Alumno.FechaNacimiento)
             .ToListAsync();
     }
 

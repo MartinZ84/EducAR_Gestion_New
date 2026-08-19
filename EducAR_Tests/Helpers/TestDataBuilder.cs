@@ -71,7 +71,7 @@ public static class TestDataBuilder
         IdAlumno  = id,
         IdEscuela = idEscuela,
         Dni       = 40000001 + id,
-        FecNac    = new DateOnly(2014, 1, Math.Min(id, 28)),
+        FechaNacimiento    = new DateTime(2014, 1, Math.Min(id, 28)),
         Nombre    = $"Alumno{id}",
         Apellido  = $"Apellido{id}",
         Activo    = true,

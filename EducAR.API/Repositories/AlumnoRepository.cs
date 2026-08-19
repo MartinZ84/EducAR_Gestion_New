@@ -31,6 +31,7 @@ public class AlumnoRepository : IAlumnoRepository
             .Include(a => a.AlumnoTutores)
                 .ThenInclude(at => at.Tutor)
                     .ThenInclude(t => t.Usuario)
+            .Include(a => a.Telefonos)
             .FirstOrDefaultAsync(a => a.IdAlumno == idAlumno && a.IdEscuela == idEscuela);
     }
 
@@ -117,11 +118,19 @@ public class AlumnoRepository : IAlumnoRepository
             .Where(a => a.IdEscuela == idEscuela && a.Activo)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(nombre))
-            query = query.Where(a => a.Nombre.Contains(nombre));
+        // if (!string.IsNullOrWhiteSpace(nombre))
+        //     query = query.Where(a => a.Nombre.Contains(nombre));
 
-        if (!string.IsNullOrWhiteSpace(apellido))
-            query = query.Where(a => a.Apellido.Contains(apellido));
+        // if (!string.IsNullOrWhiteSpace(apellido))
+        //     query = query.Where(a => a.Apellido.Contains(apellido));
+        var texto = nombre;
+
+        if (!string.IsNullOrWhiteSpace(texto))
+        {
+            query = query.Where(a =>
+                a.Nombre.Contains(texto) ||
+                a.Apellido.Contains(texto));
+        }
 
         if (dni.HasValue)
             query = query.Where(a => a.Dni == dni.Value);

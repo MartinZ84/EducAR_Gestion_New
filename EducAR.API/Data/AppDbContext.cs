@@ -25,6 +25,7 @@ public class AppDbContext : DbContext
     public DbSet<Boletin> Boletines => Set<Boletin>();
     public DbSet<DetalleBoletin> DetallesBoletines => Set<DetalleBoletin>();
     public DbSet<Mensaje> Mensajes => Set<Mensaje>();
+    public DbSet<TelefonoContacto> TelefonosContacto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -308,5 +309,23 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Asistencia>()
             .HasIndex(x => new { x.IdAlumno, x.IdCurso, x.Fecha })
             .IsUnique();
+
+        modelBuilder.Entity<Calificacion>()
+            .HasIndex(x => new { x.IdAlumno, x.IdMateria, x.IdPeriodoEvaluacion })
+            .IsUnique();
+
+        modelBuilder.Entity<Boletin>()
+            .HasIndex(x => new { x.IdAlumno, x.IdPeriodoEvaluacion })
+            .IsUnique();
+
+        modelBuilder.Entity<DetalleBoletin>()
+            .HasIndex(x => new { x.IdBoletin, x.IdMateria })
+            .IsUnique();
+
+        modelBuilder.Entity<TelefonoContacto>()
+            .HasOne(t => t.Alumno)
+            .WithMany(a => a.Telefonos)
+            .HasForeignKey(t => t.IdAlumno)
+            .OnDelete(DeleteBehavior.Cascade); // O NoAction según tu preferencia
     }
 }

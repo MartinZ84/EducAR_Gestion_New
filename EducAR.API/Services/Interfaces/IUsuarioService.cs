@@ -12,5 +12,5 @@ public interface IUsuarioService
     Task<bool> Eliminar(int idUsuario, int idEscuela);
     Task<(bool exito, string mensaje)> CambiarContrasena(int idUsuario, CambiarContrasenaDto dto);
     Task<PerfilResponseDto?> ObtenerPerfil(int idUsuario);
-    Task<ResultadoPaginadoDto<UsuarioResponseDto>> ObtenerTodosPaginado(int idEscuela, int pagina, int cantidad);
+    Task<ResultadoPaginadoDto<UsuarioResponseDto>> ObtenerTodosPaginado(int idEscuela, int pagina, int cantidad, string? nombre = null, string? apellido = null, int? dni = null);
 }

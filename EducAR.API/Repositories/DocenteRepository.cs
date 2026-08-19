@@ -80,11 +80,14 @@ public class DocenteRepository : IDocenteRepository
             .Where(d => d.Usuario.IdEscuela == idEscuela && d.Activo)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(nombre))
-            query = query.Where(d => d.Usuario.Nombre.Contains(nombre));
+       var texto = nombre;
 
-        if (!string.IsNullOrWhiteSpace(apellido))
-            query = query.Where(d => d.Usuario.Apellido.Contains(apellido));
+        if (!string.IsNullOrWhiteSpace(texto))
+        {
+            query = query.Where(a =>
+                a.Usuario.Nombre.Contains(texto) ||
+                a.Usuario.Apellido.Contains(texto));
+        }
 
         if (dni.HasValue)
             query = query.Where(d => d.Usuario.Dni == dni.Value);

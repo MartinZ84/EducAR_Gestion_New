@@ -14,11 +14,11 @@ public class UsuarioRepository : IUsuarioRepository
         _context = context;
     }
 
-    public async Task<List<Usuario>> ObtenerTodos(int idEscuela)
+    public async Task<List<Usuario>> ObtenerTodos(int idEscuela, string? nombre = null, string? apellido = null, int? dni = null)
     {
         return await _context.Usuarios
             .Include(u => u.Rol)
-            .Where(u => u.IdEscuela == idEscuela)
+            .Where(u => u.IdEscuela == idEscuela && (nombre == null || u.Nombre.Contains(nombre)) && (apellido == null || u.Apellido.Contains(apellido)) && (dni == null || u.Dni == dni))
             .OrderBy(u => u.Apellido)
             .ToListAsync();
     }
@@ -126,14 +126,46 @@ public class UsuarioRepository : IUsuarioRepository
                                     !u.Activo);
     }
 
-    public Task<IQueryable<Usuario>> ObtenerQueryable(int idEscuela)
+    // public Task<IQueryable<Usuario>> ObtenerQueryable(int idEscuela, string? nombre = null, string? apellido = null, int? dni = null)
+    // {
+    //     var query = _context.Usuarios
+    //         .Include(u => u.Rol)
+    //         .Where(u => u.IdEscuela == idEscuela && (nombre == null || u.Nombre.Contains(nombre)) && (apellido == null || u.Apellido.Contains(apellido)) && (dni == null || u.Dni == dni))
+    //         .OrderBy(u => u.Apellido)
+    //         .AsQueryable();
+
+    //     return Task.FromResult(query);
+    // }
+ public async Task<IQueryable<Usuario>> ObtenerQueryable(
+        int idEscuela, 
+        string? nombre = null, 
+        string? apellido = null, 
+        int? dni = null)
     {
         var query = _context.Usuarios
             .Include(u => u.Rol)
             .Where(u => u.IdEscuela == idEscuela)
-            .OrderBy(u => u.Apellido)
             .AsQueryable();
 
-        return Task.FromResult(query);
+        if (!string.IsNullOrWhiteSpace(nombre) && string.IsNullOrWhiteSpace(apellido))
+        {
+            query = query.Where(u => 
+                u.Nombre.Contains(nombre) || 
+                u.Apellido.Contains(nombre));
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(nombre))
+                query = query.Where(u => u.Nombre.Contains(nombre));
+
+            if (!string.IsNullOrWhiteSpace(apellido))
+                query = query.Where(u => u.Apellido.Contains(apellido));
+        }
+
+        if (dni.HasValue)
+            query = query.Where(u => u.Dni == dni.Value);
+
+        // Usar Task.FromResult para envolver el IQueryable
+        return await Task.FromResult(query.OrderBy(u => u.Apellido));
     }
 }

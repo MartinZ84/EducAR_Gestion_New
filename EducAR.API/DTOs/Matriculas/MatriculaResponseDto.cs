@@ -8,7 +8,7 @@ public class MatriculaResponseDto
     public int Dni { get; set; }
     public string NombreAlumno { get; set; } = null!;
     public string ApellidoAlumno { get; set; } = null!;
-    public DateOnly FecNac { get; set; }
+    public DateTime? FecNac { get; set; }
     public int IdCurso { get; set; }
     public string Curso { get; set; } = null!;
     public int IdCicloLectivo { get; set; }

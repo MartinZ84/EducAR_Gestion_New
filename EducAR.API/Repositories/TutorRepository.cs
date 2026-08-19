@@ -80,11 +80,20 @@ public class TutorRepository : ITutorRepository
             .Where(t => t.Usuario.IdEscuela == idEscuela && t.Usuario.Activo)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(nombre))
-            query = query.Where(t => t.Usuario.Nombre.Contains(nombre));
+             var texto = nombre;
 
-        if (!string.IsNullOrWhiteSpace(apellido))
-            query = query.Where(t => t.Usuario.Apellido.Contains(apellido));
+        if (!string.IsNullOrWhiteSpace(texto))
+        {
+            query = query.Where(a =>
+                a.Usuario.Nombre.Contains(texto) ||
+                a.Usuario.Apellido.Contains(texto));
+        }
+
+        // if (!string.IsNullOrWhiteSpace(nombre))
+        //     query = query.Where(t => t.Usuario.Nombre.Contains(nombre));
+
+        // if (!string.IsNullOrWhiteSpace(apellido))
+        //     query = query.Where(t => t.Usuario.Apellido.Contains(apellido));
 
         if (dni.HasValue)
             query = query.Where(t => t.Usuario.Dni == dni.Value);

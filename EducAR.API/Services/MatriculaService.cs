@@ -128,7 +128,7 @@ public class MatriculaService : IMatriculaService
             .OrderBy(a => a.Apellido)
             .ThenBy(a => a.Nombre)
             .ThenBy(a => a.Dni)
-            .ThenBy(a => a.FecNac)
+            .ThenBy(a => a.FechaNacimiento)
             .Skip((paginacion.Pagina - 1) * paginacion.Cantidad)
             .Take(paginacion.Cantidad)
             .ToListAsync();
@@ -147,7 +147,7 @@ public class MatriculaService : IMatriculaService
                 Dni = a.Dni,
                 Nombre = a.Nombre,
                 Apellido = a.Apellido,
-                FecNac = a.FecNac,
+                FecNac = a.FechaNacimiento,
                 Matriculado = activa,
                 IdMatricula = matricula?.IdMatricula,
                 IdCursoActual = activa ? matricula!.IdCurso : null,
@@ -229,7 +229,7 @@ public class MatriculaService : IMatriculaService
         Dni = m.Alumno.Dni,
         NombreAlumno = m.Alumno.Nombre,
         ApellidoAlumno = m.Alumno.Apellido,
-        FecNac = m.Alumno.FecNac,
+        FecNac = m.Alumno.FechaNacimiento,
         IdCurso = m.IdCurso,
         Curso = $"{m.Curso.Grado}° {m.Curso.Division}" + (string.IsNullOrWhiteSpace(m.Curso.Turno) ? string.Empty : $" - {m.Curso.Turno}"),
         IdCicloLectivo = m.IdCicloLectivo,

@@ -147,9 +147,17 @@ public class UsuarioService : IUsuarioService
         };
     }
 
-    public async Task<ResultadoPaginadoDto<UsuarioResponseDto>> ObtenerTodosPaginado(int idEscuela, int pagina, int cantidad)
+     public async Task<ResultadoPaginadoDto<UsuarioResponseDto>> ObtenerTodosPaginado(
+        int idEscuela, 
+        int pagina, 
+        int cantidad, 
+        string? nombre = null, 
+        string? apellido = null, 
+        int? dni = null)
     {
-        var query = await _usuarioRepository.ObtenerQueryable(idEscuela);
+        // Usar await porque el repository retorna Task
+        var query = await _usuarioRepository.ObtenerQueryable(idEscuela, nombre, apellido, dni);
+        
         var queryDto = query.Select(u => new UsuarioResponseDto
         {
             IdUsuario     = u.IdUsuario,

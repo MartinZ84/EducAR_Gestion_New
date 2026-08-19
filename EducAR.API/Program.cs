@@ -72,6 +72,8 @@ builder.Services.AddScoped<IEscuelaRepository, EscuelaRepository>();
 builder.Services.AddScoped<IEscuelaService, EscuelaService>();
 builder.Services.AddScoped<IEscuelaRepository, EscuelaRepository>();
 builder.Services.AddScoped<IEscuelaService, EscuelaService>();
+builder.Services.AddScoped<ITelefonoRepository, TelefonoRepository>();
+builder.Services.AddScoped<ITelefonoService, TelefonoService>();
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>

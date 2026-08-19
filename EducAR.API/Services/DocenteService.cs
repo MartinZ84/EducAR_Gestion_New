@@ -134,6 +134,10 @@ public class DocenteService : IDocenteService
         if (docente is null)
             return (false, "Docente no encontrado.");
 
+
+        if (await _usuarioRepository.ExisteDni(dto.Dni, idEscuela, docente.IdUsuario))
+            return (false, $"El DNI '{dto.Dni}' ya está siendo usado por otro usuario en esta escuela.");
+
         // Validar email duplicado ANTES de intentar guardar
         if (!string.Equals(docente.Usuario.Email, dto.Email, StringComparison.OrdinalIgnoreCase))
         {
@@ -145,6 +149,7 @@ public class DocenteService : IDocenteService
         docente.Usuario.Apellido = dto.Apellido;
         docente.Usuario.Email = dto.Email;
         docente.Usuario.Activo = dto.Activo;
+        docente.Usuario.Dni = dto.Dni;
         docente.Activo = dto.Activo;
 
         await _docenteRepository.Actualizar(docente);
