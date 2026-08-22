@@ -59,6 +59,15 @@ public class UsuariosController : ControllerBase
         return Ok(usuario);
     }
 
+    [HttpGet("{id}/detalle")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> ObtenerDetalle(int id)
+    {
+        var usuario = await _usuarioService.ObtenerDetalle(id, IdEscuelaActual);
+        if (usuario is null) return NotFound(new { mensaje = "Registro no encontrado" });
+        return Ok(usuario);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear([FromBody] UsuarioCreateDto dto)

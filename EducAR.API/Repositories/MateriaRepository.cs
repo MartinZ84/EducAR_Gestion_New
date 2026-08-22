@@ -28,6 +28,14 @@ public class MateriaRepository : IMateriaRepository
             .FirstOrDefaultAsync(m => m.IdMateria == idMateria && m.IdEscuela == idEscuela);
     }
 
+    public async Task<Materia?> ObtenerDetalle(int idMateria, int idEscuela)
+    {
+        return await _context.Materias.AsNoTracking()
+            .Include(m => m.DocenteMateriaCursos).ThenInclude(dmc => dmc.Docente).ThenInclude(d => d.Usuario)
+            .Include(m => m.DocenteMateriaCursos).ThenInclude(dmc => dmc.Curso).ThenInclude(c => c.CicloLectivo)
+            .FirstOrDefaultAsync(m => m.IdMateria == idMateria && m.IdEscuela == idEscuela);
+    }
+
     public async Task<bool> ExisteNombre(string nombre, int idEscuela, int? excluirId = null)
     {
         return await _context.Materias
@@ -65,7 +73,7 @@ public class MateriaRepository : IMateriaRepository
     public Task<IQueryable<Materia>> ObtenerQueryable(int idEscuela, string? nombre = null)
     {
         var query = _context.Materias
-            .Where(m => m.IdEscuela == idEscuela && m.Activo)
+            .Where(m => m.IdEscuela == idEscuela)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(nombre))

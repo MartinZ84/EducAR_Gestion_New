@@ -30,6 +30,19 @@ public class DocenteRepository : IDocenteRepository
             .FirstOrDefaultAsync(d => d.IdDocente == idDocente && d.Usuario.IdEscuela == idEscuela);
     }
 
+    public async Task<Docente?> ObtenerDetalle(int idDocente, int idEscuela)
+    {
+        return await _context.Docentes
+            .AsNoTracking()
+            .Include(d => d.Usuario)
+            .Include(d => d.DocenteMateriaCursos)
+                .ThenInclude(dmc => dmc.Materia)
+            .Include(d => d.DocenteMateriaCursos)
+                .ThenInclude(dmc => dmc.Curso)
+                    .ThenInclude(c => c.CicloLectivo)
+            .FirstOrDefaultAsync(d => d.IdDocente == idDocente && d.Usuario.IdEscuela == idEscuela);
+    }
+
     public async Task<Docente> Crear(Docente docente)
     {
         _context.Docentes.Add(docente);

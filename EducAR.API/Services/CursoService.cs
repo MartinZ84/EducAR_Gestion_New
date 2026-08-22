@@ -38,6 +38,15 @@ public class CursoService : ICursoService
         return curso is null ? null : MapearAResponseDto(curso);
     }
 
+    public async Task<CursoDetalleDto?> ObtenerDetalle(int idCurso, int idEscuela)
+    {
+        var curso = await _cursoRepository.ObtenerDetalle(idCurso, idEscuela);
+        if (curso is null) return null;
+        var alumnos = curso.Matriculas.Where(m => m.Estado == EstadoMatricula.Activa && m.Alumno.Activo).Select(m => new AlumnoCursoDetalleDto
+        { IdAlumno = m.Alumno.IdAlumno, Dni = m.Alumno.Dni, NombreCompleto = $"{m.Alumno.Nombre} {m.Alumno.Apellido}" }).ToList();
+        return new CursoDetalleDto { IdCurso = curso.IdCurso, Nombre = $"{curso.Grado}°", Division = curso.Division, Turno = curso.Turno, CicloLectivo = curso.CicloLectivo.Anio.ToString(), AlumnosMatriculados = alumnos, CantidadTotalAlumnos = alumnos.Count };
+    }
+
     public async Task<(bool exito, string mensaje, CursoResponseDto? curso)> Crear(CursoCreateDto dto, int idEscuela)
     {
         var ciclo = await _cicloLectivoRepository.ObtenerPorId(dto.IdCicloLectivo, idEscuela);

@@ -6,6 +6,7 @@ public interface IMateriaRepository
 {
     Task<List<Materia>> ObtenerTodas(int idEscuela);
     Task<Materia?> ObtenerPorId(int idMateria, int idEscuela);
+    Task<Materia?> ObtenerDetalle(int idMateria, int idEscuela);
     Task<bool> ExisteNombre(string nombre, int idEscuela, int? excluirId = null);
     Task<Materia> Crear(Materia materia);
     Task<bool> Actualizar(Materia materia);

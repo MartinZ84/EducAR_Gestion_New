@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EducAR.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c0ac0baacf0a526302509fa014b16a26efd5446a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a90c51114c00ef84742d39f7298a824abcb37450")]
 [assembly: System.Reflection.AssemblyProductAttribute("EducAR.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EducAR.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

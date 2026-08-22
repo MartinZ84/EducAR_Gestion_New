@@ -28,6 +28,13 @@ public class CicloLectivoRepository : ICicloLectivoRepository
             .FirstOrDefaultAsync(c => c.IdCicloLectivo == idCicloLectivo && c.IdEscuela == idEscuela);
     }
 
+    public async Task<CicloLectivo?> ObtenerDetalle(int idCicloLectivo, int idEscuela)
+    {
+        return await _context.CiclosLectivos.AsNoTracking()
+            .Include(c => c.Cursos).ThenInclude(curso => curso.Matriculas).ThenInclude(m => m.Alumno)
+            .FirstOrDefaultAsync(c => c.IdCicloLectivo == idCicloLectivo && c.IdEscuela == idEscuela);
+    }
+
     public async Task<bool> ExisteAnio(int anio, int idEscuela, int? excluirId = null)
     {
         return await _context.CiclosLectivos

@@ -53,4 +53,14 @@ public class TelefonosController : ControllerBase
 
         return Ok(new { mensaje });
     }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> Actualizar(int id, [FromBody] TelefonoCreateDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var (exito, mensaje, telefono) = await _telefonoService.ActualizarAsync(id, dto, IdEscuelaActual);
+        if (!exito) return BadRequest(new { mensaje });
+        return Ok(telefono);
+    }
 }

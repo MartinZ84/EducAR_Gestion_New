@@ -6,6 +6,7 @@ public interface IAlumnoRepository
 {
     Task<List<Alumno>> ObtenerTodos(int idEscuela);
     Task<Alumno?> ObtenerPorId(int idAlumno, int idEscuela);
+    Task<Alumno?> ObtenerDetalle(int idAlumno, int idEscuela);
     Task<bool> ExisteDni(int dni, int idEscuela, int? excluirIdAlumno = null);
     Task<Alumno> Crear(Alumno alumno);
     Task<bool> Actualizar(Alumno alumno);

@@ -30,6 +30,21 @@ public class TutorRepository : ITutorRepository
             .FirstOrDefaultAsync(t => t.IdTutor == idTutor && t.Usuario.IdEscuela == idEscuela);
     }
 
+    public async Task<Tutor?> ObtenerDetalle(int idTutor, int idEscuela)
+    {
+        return await _context.Tutores.AsNoTracking()
+            .Include(t => t.Usuario)
+            .Include(t => t.AlumnoTutores)
+                .ThenInclude(at => at.Alumno)
+                    .ThenInclude(a => a.Matriculas)
+                        .ThenInclude(m => m.CicloLectivo)
+            .Include(t => t.AlumnoTutores)
+                .ThenInclude(at => at.Alumno)
+                    .ThenInclude(a => a.Matriculas)
+                        .ThenInclude(m => m.Curso)
+            .FirstOrDefaultAsync(t => t.IdTutor == idTutor && t.Usuario.IdEscuela == idEscuela);
+    }
+
     public async Task<Tutor> Crear(Tutor tutor)
     {
         _context.Tutores.Add(tutor);

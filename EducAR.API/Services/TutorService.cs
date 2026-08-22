@@ -38,6 +38,30 @@ public class TutorService : ITutorService
         return tutor is null ? null : MapearAResponseDto(tutor);
     }
 
+    public async Task<TutorDetalleDto?> ObtenerDetalle(int idTutor, int idEscuela)
+    {
+        var tutor = await _tutorRepository.ObtenerDetalle(idTutor, idEscuela);
+        if (tutor is null) return null;
+        return new TutorDetalleDto
+        {
+            IdTutor = tutor.IdTutor, Dni = tutor.Usuario.Dni, Nombre = tutor.Usuario.Nombre,
+            Apellido = tutor.Usuario.Apellido, Email = tutor.Usuario.Email,
+            Activo = tutor.Usuario.Activo,
+            AlumnosAsignados = tutor.AlumnoTutores.Where(at => at.Activo && at.Alumno.Activo)
+                .Select(at =>
+                {
+                    var matricula = at.Alumno.Matriculas.FirstOrDefault(m =>
+                        m.Estado == EstadoMatricula.Activa && m.CicloLectivo.Activo);
+                    return new AlumnoTutorDetalleDto
+                    {
+                        IdAlumno = at.Alumno.IdAlumno, Dni = at.Alumno.Dni,
+                        NombreCompleto = $"{at.Alumno.Nombre} {at.Alumno.Apellido}",
+                        CursoActual = matricula is null ? string.Empty : $"{matricula.Curso.Grado}° {matricula.Curso.Division}"
+                    };
+                }).ToList()
+        };
+    }
+
     public async Task<(bool exito, string mensaje, TutorResponseDto? tutor)> Crear(TutorCreateDto dto, int idEscuela)
     {
         if (await _usuarioRepository.ExisteNombreUsuario(dto.NombreUsuario, idEscuela))
@@ -131,12 +155,16 @@ public class TutorService : ITutorService
         if (tutor is null)
             return (false, "Tutor no encontrado.");
 
+        if (await _usuarioRepository.ExisteDni(dto.Dni, idEscuela, tutor.IdUsuario))
+            return (false, "Ya existe un usuario con ese DNI en esta escuela.");
+
         if (!string.Equals(tutor.Usuario.Email, dto.Email, StringComparison.OrdinalIgnoreCase))
         {
             if (await _usuarioRepository.ExisteEmail(dto.Email, idEscuela, tutor.IdUsuario))
                 return (false, $"El email '{dto.Email}' ya está siendo usado por otro usuario en esta escuela.");
         }
 
+        tutor.Usuario.Dni      = dto.Dni;
         tutor.Usuario.Nombre   = dto.Nombre;
         tutor.Usuario.Apellido = dto.Apellido;
         tutor.Usuario.Email    = dto.Email;

@@ -45,6 +45,14 @@ public class CursoRepository : ICursoRepository
             .FirstOrDefaultAsync(c => c.IdCurso == idCurso && c.IdEscuela == idEscuela);
     }
 
+    public async Task<Curso?> ObtenerDetalle(int idCurso, int idEscuela)
+    {
+        return await _context.Cursos.AsNoTracking()
+            .Include(c => c.CicloLectivo)
+            .Include(c => c.Matriculas).ThenInclude(m => m.Alumno)
+            .FirstOrDefaultAsync(c => c.IdCurso == idCurso && c.IdEscuela == idEscuela);
+    }
+
     public async Task<bool> ExisteCurso(int grado, string division, string? turno, int idCicloLectivo, int? excluirId = null)
     {
         return await _context.Cursos

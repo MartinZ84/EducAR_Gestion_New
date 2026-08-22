@@ -30,6 +30,13 @@ public class UsuarioRepository : IUsuarioRepository
             .FirstOrDefaultAsync(u => u.IdUsuario == idUsuario && u.IdEscuela == idEscuela);
     }
 
+    public async Task<Usuario?> ObtenerDetalle(int idUsuario, int idEscuela)
+    {
+        return await _context.Usuarios.AsNoTracking()
+            .Include(u => u.Rol)
+            .FirstOrDefaultAsync(u => u.IdUsuario == idUsuario && u.IdEscuela == idEscuela);
+    }
+
     // public async Task<bool> ExisteNombreUsuario(string nombreUsuario, int idEscuela)
     // {
     //     return await _context.Usuarios

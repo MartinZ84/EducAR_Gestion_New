@@ -28,6 +28,17 @@ public class UsuarioService : IUsuarioService
         return usuario is null ? null : MapearAResponseDto(usuario);
     }
 
+    public async Task<UsuarioDetalleDto?> ObtenerDetalle(int idUsuario, int idEscuela)
+    {
+        var usuario = await _usuarioRepository.ObtenerDetalle(idUsuario, idEscuela);
+        return usuario is null ? null : new UsuarioDetalleDto
+        {
+            IdUsuario = usuario.IdUsuario, Dni = usuario.Dni, Nombre = usuario.Nombre,
+            Apellido = usuario.Apellido, Email = usuario.Email, Rol = usuario.Rol.Nombre,
+            Activo = usuario.Activo, FechaCrea = usuario.FechaCrea, FechaAct = usuario.FechaAct
+        };
+    }
+
     public async Task<(bool exito, string mensaje, UsuarioResponseDto? usuario)> Crear(UsuarioCreateDto dto)
     {
          // Validar duplicados

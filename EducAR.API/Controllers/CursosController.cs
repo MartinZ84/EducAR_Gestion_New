@@ -47,6 +47,15 @@ public class CursosController : ControllerBase
         return Ok(curso);
     }
 
+    [HttpGet("{id}/detalle")]
+    [Authorize(Roles = "Administrador,Docente")]
+    public async Task<IActionResult> ObtenerDetalle(int id)
+    {
+        var curso = await _cursoService.ObtenerDetalle(id, IdEscuelaActual);
+        if (curso is null) return NotFound(new { mensaje = "Registro no encontrado" });
+        return Ok(curso);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear([FromBody] CursoCreateDto dto)

@@ -7,6 +7,7 @@ public interface ICursoRepository
     Task<List<Curso>> ObtenerTodos(int idEscuela);
     Task<List<Curso>> ObtenerPorCicloLectivo(int idCicloLectivo, int idEscuela);
     Task<Curso?> ObtenerPorId(int idCurso, int idEscuela);
+    Task<Curso?> ObtenerDetalle(int idCurso, int idEscuela);
     Task<bool> ExisteCurso(int grado, string division, string? turno, int idCicloLectivo, int? excluirId = null);
     Task<bool> TieneAlumnosInscriptos(int idCurso);
     Task<bool> TieneAsistencias(int idCurso);

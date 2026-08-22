@@ -38,6 +38,15 @@ public class CiclosLectivosController : ControllerBase
         return Ok(ciclo);
     }
 
+    [HttpGet("{id}/detalle")]
+    [Authorize(Roles = "Administrador,Docente")]
+    public async Task<IActionResult> ObtenerDetalle(int id)
+    {
+        var ciclo = await _cicloLectivoService.ObtenerDetalle(id, IdEscuelaActual);
+        if (ciclo is null) return NotFound(new { mensaje = "Registro no encontrado" });
+        return Ok(ciclo);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear([FromBody] CicloLectivoCreateDto dto)

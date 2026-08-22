@@ -7,6 +7,7 @@ public interface IUsuarioService
 {
     Task<List<UsuarioResponseDto>> ObtenerTodos(int idEscuela);
     Task<UsuarioResponseDto?> ObtenerPorId(int idUsuario, int idEscuela);
+    Task<UsuarioDetalleDto?> ObtenerDetalle(int idUsuario, int idEscuela);
     Task<(bool exito, string mensaje, UsuarioResponseDto? usuario)> Crear(UsuarioCreateDto dto);
     Task<(bool exito, string mensaje)> Actualizar(int idUsuario, int idEscuela, UsuarioUpdateDto dto);
     Task<bool> Eliminar(int idUsuario, int idEscuela);

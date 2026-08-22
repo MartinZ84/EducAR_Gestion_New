@@ -38,6 +38,18 @@ public class TelefonoRepository : ITelefonoRepository
         return telefono;
     }
 
+    public async Task<TelefonoContacto?> ActualizarAsync(TelefonoContacto telefono)
+    {
+        var existente = await _context.TelefonosContacto.FindAsync(telefono.IdTelefono);
+        if (existente is null) return null;
+        existente.Numero = telefono.Numero;
+        existente.Des = telefono.Des;
+        existente.Tipo = telefono.Tipo;
+        existente.EsPrincipal = telefono.EsPrincipal;
+        await _context.SaveChangesAsync();
+        return existente;
+    }
+
     public async Task EliminarAsync(int idTelefono)
     {
         var telefono = await _context.TelefonosContacto.FindAsync(idTelefono);

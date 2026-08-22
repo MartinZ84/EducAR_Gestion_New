@@ -11,6 +11,9 @@ public class TelefonoCreateDto
     [MaxLength(50, ErrorMessage = "Máximo 50 caracteres.")]
     public string Numero { get; set; } = string.Empty;
 
+    [MaxLength(100)]
+    public string? Des { get; set; }
+
     [MaxLength(50)]
     public string? Tipo { get; set; }
 

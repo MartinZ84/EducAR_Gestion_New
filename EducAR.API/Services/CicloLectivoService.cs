@@ -26,6 +26,14 @@ public class CicloLectivoService : ICicloLectivoService
         return ciclo is null ? null : MapearAResponseDto(ciclo);
     }
 
+    public async Task<CicloLectivoDetalleDto?> ObtenerDetalle(int idCicloLectivo, int idEscuela)
+    {
+        var ciclo = await _cicloLectivoRepository.ObtenerDetalle(idCicloLectivo, idEscuela);
+        if (ciclo is null) return null;
+        var cursos = ciclo.Cursos.Select(c => new CursoCicloLectivoDetalleDto { IdCurso = c.IdCurso, Curso = $"{c.Grado}° {c.Division}", CantidadAlumnos = c.Matriculas.Count(m => m.Estado == EstadoMatricula.Activa) }).ToList();
+        return new CicloLectivoDetalleDto { IdCicloLectivo = ciclo.IdCicloLectivo, Anio = ciclo.Anio, FechaInicio = ciclo.FechaInicio, FechaFin = ciclo.FechaFin, Activo = ciclo.Activo, Cursos = cursos, CantidadCursos = cursos.Count, CantidadAlumnosMatriculados = cursos.Sum(c => c.CantidadAlumnos) };
+    }
+
     public async Task<(bool exito, string mensaje, CicloLectivoResponseDto? ciclo)> Crear(CicloLectivoCreateDto dto, int idEscuela)
     {
         if (await _cicloLectivoRepository.ExisteAnio(dto.Anio, idEscuela))

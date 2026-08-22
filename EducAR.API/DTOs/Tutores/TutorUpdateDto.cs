@@ -4,6 +4,10 @@ namespace EducAR.API.DTOs.Tutores;
 
 public class TutorUpdateDto
 {
+    [Required(ErrorMessage = "El DNI es obligatorio.")]
+    [Range(1000000, 99999999, ErrorMessage = "El DNI debe tener entre 7 y 8 dígitos.")]
+    public int Dni { get; set; }
+
     [Required(ErrorMessage = "El nombre es obligatorio.")]
     [MaxLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres.")]
     public string Nombre { get; set; } = null!;

@@ -38,6 +38,32 @@ public class DocenteService : IDocenteService
         return docente is null ? null : MapearAResponseDto(docente);
     }
 
+    public async Task<DocenteDetalleDto?> ObtenerDetalle(int idDocente, int idEscuela)
+    {
+        var docente = await _docenteRepository.ObtenerDetalle(idDocente, idEscuela);
+        if (docente is null) return null;
+
+        return new DocenteDetalleDto
+        {
+            IdDocente = docente.IdDocente,
+            Dni = docente.Usuario.Dni,
+            Nombre = docente.Usuario.Nombre,
+            Apellido = docente.Usuario.Apellido,
+            Email = docente.Usuario.Email,
+            Activo = docente.Activo,
+            CursosAsignados = docente.DocenteMateriaCursos
+                .Where(dmc => dmc.Activo && dmc.Materia.Activo && dmc.Curso.Activo)
+                .Select(dmc => new CursoDocenteDetalleDto
+                {
+                    IdCurso = dmc.IdCurso,
+                    Curso = $"{dmc.Curso.Grado}° {dmc.Curso.Division}",
+                    Materia = dmc.Materia.Nombre,
+                    CicloLectivo = dmc.Curso.CicloLectivo.Anio.ToString()
+                })
+                .ToList()
+        };
+    }
+
     public async Task<(bool exito, string mensaje, DocenteResponseDto? docente)> Crear(DocenteCreateDto dto, int idEscuela)
     {
         if (await _usuarioRepository.ExisteNombreUsuario(dto.NombreUsuario, idEscuela))

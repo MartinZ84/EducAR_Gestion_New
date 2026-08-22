@@ -87,14 +87,9 @@ public class MatriculaRepository : IMatriculaRepository
 
     public Task<IQueryable<Alumno>> ObtenerAlumnosParaMatricular(int idEscuela, int anioRegistro, int idCicloLectivo)
     {
-        var inicio = new DateTime(anioRegistro, 1, 1);
-        var fin = inicio.AddYears(1);
-
         var query = _context.Alumnos
             .Where(a => a.IdEscuela == idEscuela &&
-                        a.Activo &&
-                        a.FechaCrea >= inicio &&
-                        a.FechaCrea < fin)
+                        a.Activo)
             .Select(a => a);
 
         return Task.FromResult(query);

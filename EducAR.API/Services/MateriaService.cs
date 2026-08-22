@@ -28,6 +28,15 @@ public class MateriaService : IMateriaService
         return materia is null ? null : MapearAResponseDto(materia);
     }
 
+    public async Task<MateriaDetalleDto?> ObtenerDetalle(int idMateria, int idEscuela)
+    {
+        var materia = await _materiaRepository.ObtenerDetalle(idMateria, idEscuela);
+        if (materia is null) return null;
+        return new MateriaDetalleDto { IdMateria = materia.IdMateria, Nombre = materia.Nombre, Descripcion = materia.Descripcion,
+            DocentesAsignados = materia.DocenteMateriaCursos.Where(x => x.Activo && x.Docente.Activo).Select(x => new DocenteMateriaDetalleDto { IdDocente = x.IdDocente, NombreCompleto = $"{x.Docente.Usuario.Nombre} {x.Docente.Usuario.Apellido}" }).ToList(),
+            Cursos = materia.DocenteMateriaCursos.Where(x => x.Activo && x.Curso.Activo).Select(x => new CursoMateriaDetalleDto { IdCurso = x.IdCurso, Curso = $"{x.Curso.Grado}° {x.Curso.Division}", CicloLectivo = x.Curso.CicloLectivo.Anio.ToString() }).DistinctBy(x => x.IdCurso).ToList() };
+    }
+
     public async Task<(bool exito, string mensaje, MateriaResponseDto? materia)> Crear(MateriaCreateDto dto, int idEscuela)
     {
         if (await _materiaRepository.ExisteNombre(dto.Nombre, idEscuela))

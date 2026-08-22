@@ -35,6 +35,20 @@ public class AlumnoRepository : IAlumnoRepository
             .FirstOrDefaultAsync(a => a.IdAlumno == idAlumno && a.IdEscuela == idEscuela);
     }
 
+    public async Task<Alumno?> ObtenerDetalle(int idAlumno, int idEscuela)
+    {
+        return await _context.Alumnos.AsNoTracking()
+            .Include(a => a.Matriculas).ThenInclude(m => m.Curso).ThenInclude(c => c.CicloLectivo)
+            .Include(a => a.AlumnoTutores).ThenInclude(at => at.Tutor).ThenInclude(t => t.Usuario)
+            .Include(a => a.Asistencias)
+            .Include(a => a.Calificaciones).ThenInclude(c => c.Materia)
+            .Include(a => a.Calificaciones).ThenInclude(c => c.PeriodoEvaluacion)
+            .Include(a => a.Boletines).ThenInclude(b => b.PeriodoEvaluacion)
+            .Include(a => a.Boletines).ThenInclude(b => b.Detalles).ThenInclude(d => d.Materia)
+            .Include(a => a.Telefonos)
+            .FirstOrDefaultAsync(a => a.IdAlumno == idAlumno && a.IdEscuela == idEscuela);
+    }
+
     public async Task<bool> ExisteDni(int dni, int idEscuela, int? excluirIdAlumno = null)
     {
         return await _context.Alumnos

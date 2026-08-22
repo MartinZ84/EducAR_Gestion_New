@@ -30,6 +30,7 @@ public class TelefonoService : ITelefonoService
             IdTelefono = t.IdTelefono,
             IdAlumno = t.IdAlumno,
             Numero = t.Numero,
+            Des = t.Des,
             Tipo = t.Tipo,
             EsPrincipal = t.EsPrincipal,
         });
@@ -47,6 +48,7 @@ public class TelefonoService : ITelefonoService
         {
             IdAlumno = dto.IdAlumno,
             Numero = dto.Numero,
+            Des = dto.Des,
             Tipo = dto.Tipo,
             EsPrincipal = dto.EsPrincipal,
         };
@@ -58,11 +60,27 @@ public class TelefonoService : ITelefonoService
             IdTelefono = creado.IdTelefono,
             IdAlumno = creado.IdAlumno,
             Numero = creado.Numero,
+            Des = creado.Des,
             Tipo = creado.Tipo,
             EsPrincipal = creado.EsPrincipal,
         };
 
         return (true, "Teléfono agregado correctamente.", dtoResult);
+    }
+
+    public async Task<(bool exito, string mensaje, TelefonoDto? telefono)> ActualizarAsync(int idTelefono, TelefonoCreateDto dto, int idEscuela)
+    {
+        var existente = await _telefonoRepo.ObtenerPorIdAsync(idTelefono);
+        if (existente is null) return (false, "Teléfono no encontrado.", null);
+        var alumno = await _alumnoRepo.ObtenerPorId(dto.IdAlumno, idEscuela);
+        if (alumno is null || existente.IdAlumno != dto.IdAlumno) return (false, "No tenés permiso para editar este teléfono.", null);
+        existente.Numero = dto.Numero;
+        existente.Des = dto.Des;
+        existente.Tipo = dto.Tipo;
+        existente.EsPrincipal = dto.EsPrincipal;
+        var actualizado = await _telefonoRepo.ActualizarAsync(existente);
+        if (actualizado is null) return (false, "Teléfono no encontrado.", null);
+        return (true, "Teléfono actualizado correctamente.", new TelefonoDto { IdTelefono = actualizado.IdTelefono, IdAlumno = actualizado.IdAlumno, Numero = actualizado.Numero, Des = actualizado.Des, Tipo = actualizado.Tipo, EsPrincipal = actualizado.EsPrincipal });
     }
 
     public async Task<(bool exito, string mensaje)> EliminarAsync(int idTelefono, int idEscuela)

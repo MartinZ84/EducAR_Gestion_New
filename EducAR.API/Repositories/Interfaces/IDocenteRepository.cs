@@ -6,6 +6,7 @@ public interface IDocenteRepository
 {
     Task<List<Docente>> ObtenerTodos(int idEscuela);
     Task<Docente?> ObtenerPorId(int idDocente, int idEscuela);
+    Task<Docente?> ObtenerDetalle(int idDocente, int idEscuela);
     Task<Docente> Crear(Docente docente);
     Task<bool> Actualizar(Docente docente);
     Task<bool> Eliminar(int idDocente, int idEscuela);

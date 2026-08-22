@@ -28,6 +28,32 @@ public class AlumnoService : IAlumnoService
         return alumno is null ? null : MapearAResponseDto(alumno);
     }
 
+    public async Task<AlumnoDetalleDto?> ObtenerDetalle(int idAlumno, int idEscuela)
+    {
+        var alumno = await _alumnoRepository.ObtenerDetalle(idAlumno, idEscuela);
+        if (alumno is null) return null;
+        var asistencias = alumno.Asistencias.Where(a => a.Activo).ToList();
+        var boletines = alumno.Boletines.Where(b => b.Activo).ToList();
+        return new AlumnoDetalleDto
+        {
+            IdAlumno = alumno.IdAlumno, Dni = alumno.Dni, Nombre = alumno.Nombre,
+            Apellido = alumno.Apellido, FecNac = alumno.FechaNacimiento, Activo = alumno.Activo,
+            Calle = alumno.Calle, Numero = alumno.Numero, Piso = alumno.Piso, Departamento = alumno.Departamento,
+            Barrio = alumno.Barrio, Localidad = alumno.Localidad, Provincia = alumno.Provincia,
+            Telefonos = alumno.Telefonos.Select(t => new TelefonoDetalleDto { Numero = t.Numero, Des = t.Des }).ToList(),
+            MatriculaActual = alumno.Matriculas.Where(m => m.Estado == EstadoMatricula.Activa && m.CicloLectivo.Activo)
+                .OrderByDescending(m => m.FechaMatricula).Select(m => new MatriculaActualDto
+                { IdCurso = m.IdCurso, Curso = $"{m.Curso.Grado}° {m.Curso.Division}", CicloLectivo = m.CicloLectivo.Anio.ToString(), FechaMatricula = m.FechaMatricula }).FirstOrDefault(),
+            Tutores = alumno.AlumnoTutores.Where(at => at.Activo).Select(at => new AlumnoTutorDetalleDto
+            { IdTutor = at.IdTutor, NombreCompleto = $"{at.Tutor.Usuario.Nombre} {at.Tutor.Usuario.Apellido}", Parentesco = at.Parentesco }).ToList(),
+            AsistenciaResumen = new AsistenciaResumenDto { Presentes = asistencias.Count(a => a.Presente), Ausentes = asistencias.Count(a => !a.Presente), Justificadas = 0 },
+            Asistencias = asistencias.OrderByDescending(a => a.Fecha).Select(a => new AsistenciaDetalleDto { IdAsistencia = a.IdAsistencia, Fecha = a.Fecha, Presente = a.Presente, Estado = a.Presente ? "Presente" : "Ausente" }).ToList(),
+            Calificaciones = alumno.Calificaciones.Where(c => c.Activo).Select(c => new CalificacionDetalleDto { Materia = c.Materia.Nombre, Nota = c.ValorCalificacion, Periodo = c.PeriodoEvaluacion.Nombre }).ToList(),
+            Boletines = boletines.Select(b => new BoletinDetalleDto
+            { Periodo = b.PeriodoEvaluacion.Nombre, Promedio = b.Detalles.Any() ? b.Detalles.Where(d => d.Activo).Average(d => d.CalificacionFinal) : 0, Estado = b.Detalles.Any() && b.Detalles.Where(d => d.Activo).Average(d => d.CalificacionFinal) >= 6 ? "Aprobado" : "Pendiente" }).ToList()
+        };
+    }
+
     public async Task<(bool exito, string mensaje, AlumnoResponseDto? alumno)> Crear(AlumnoCreateDto dto, int idEscuela)
     {
         if (dto.FechaNacimiento == default || dto.FechaNacimiento > DateTime.Today)
@@ -66,6 +92,10 @@ public class AlumnoService : IAlumnoService
         if (alumno is null)
             return (false, "Alumno no encontrado.");
 
+        if (await _alumnoRepository.ExisteDni(dto.Dni, idEscuela, idAlumno))
+            return (false, "Ya existe un alumno con ese DNI en esta escuela.");
+
+        alumno.Dni = dto.Dni;
         alumno.Nombre = dto.Nombre;
         alumno.Apellido = dto.Apellido;
         alumno.FechaNacimiento = dto.FechaNacimiento;
@@ -164,6 +194,13 @@ public class AlumnoService : IAlumnoService
         Apellido = a.Apellido,
         FechaNacimiento = a.FechaNacimiento,
         Activo = a.Activo,
+            Calle = a.Calle,
+            Numero = a.Numero,
+            Piso = a.Piso,
+            Departamento = a.Departamento,
+            Barrio = a.Barrio,
+            Localidad = a.Localidad,
+            Provincia = a.Provincia,
         Matriculas = a.Matriculas?.Select(m => new AlumnoMatriculaDto
         {
             IdMatricula = m.IdMatricula,

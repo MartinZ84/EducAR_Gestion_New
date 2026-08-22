@@ -39,6 +39,15 @@ public class TutoresController : ControllerBase
         return Ok(tutor);
     }
 
+    [HttpGet("{id}/detalle")]
+    [Authorize(Roles = "Administrador,Docente")]
+    public async Task<IActionResult> ObtenerDetalle(int id)
+    {
+        var tutor = await _tutorService.ObtenerDetalle(id, IdEscuelaActual);
+        if (tutor is null) return NotFound(new { mensaje = "Registro no encontrado" });
+        return Ok(tutor);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear([FromBody] TutorCreateDto dto)

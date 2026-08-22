@@ -16,6 +16,9 @@ public class TelefonoContacto
     [MaxLength(50)]
     public string Numero { get; set; } = string.Empty;
 
+    [MaxLength(100)]
+    public string? Des { get; set; }
+
     [MaxLength(50)]
     public string? Tipo { get; set; }
 

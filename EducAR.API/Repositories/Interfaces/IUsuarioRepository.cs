@@ -6,6 +6,7 @@ public interface IUsuarioRepository
 {
     Task<List<Usuario>> ObtenerTodos(int idEscuela, string? nombre = null, string? apellido = null, int? dni = null);
     Task<Usuario?> ObtenerPorId(int idUsuario, int idEscuela);
+    Task<Usuario?> ObtenerDetalle(int idUsuario, int idEscuela);
     Task<bool> ExisteNombreUsuario(string nombreUsuario, int idEscuela);
     Task<Usuario> Crear(Usuario usuario);
     Task<bool> Actualizar(Usuario usuario);
