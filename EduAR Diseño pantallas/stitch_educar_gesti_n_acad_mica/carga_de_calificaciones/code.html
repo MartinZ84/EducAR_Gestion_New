@@ -1,0 +1,337 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#89fa9b",
+                    "primary": "#005bbf",
+                    "outline": "#727785",
+                    "primary-container": "#1a73e8",
+                    "tertiary": "#006d2c",
+                    "on-surface": "#181c20",
+                    "on-tertiary-fixed": "#002108",
+                    "surface-container": "#eceef3",
+                    "surface-variant": "#e0e2e7",
+                    "on-secondary-container": "#00285c",
+                    "background": "#f7f9fe",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f7f9fe",
+                    "surface-dim": "#d8dadf",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#f1f4f9",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "tertiary-fixed-dim": "#6ddd81",
+                    "on-background": "#181c20",
+                    "inverse-primary": "#adc7ff",
+                    "tertiary-container": "#008939",
+                    "inverse-on-surface": "#eff1f6",
+                    "primary-fixed-dim": "#adc7ff",
+                    "surface-tint": "#005bc0",
+                    "surface-bright": "#f7f9fe",
+                    "surface-container-highest": "#e0e2e7",
+                    "on-tertiary-container": "#ffffff",
+                    "on-primary-container": "#ffffff",
+                    "outline-variant": "#c1c6d6",
+                    "surface-container-high": "#e6e8ed",
+                    "on-surface-variant": "#414754",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2d3135",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-primary-fixed": "#001a41",
+                    "secondary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#4d8efe",
+                    "on-secondary-fixed-variant": "#004494",
+                    "primary-fixed": "#d8e2ff",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "secondary": "#005ac1",
+                    "on-secondary-fixed": "#001a41"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "margin-mobile": "16px",
+                    "gutter-mobile": "12px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "display-lg": ["Roboto Flex"],
+                    "title-lg": ["Roboto Flex"],
+                    "label-lg": ["Roboto Flex"],
+                    "label-sm": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-md": ["Roboto Flex"],
+                    "title-md": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Roboto Flex', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+            transform: translateY(-20px) scale(0.85);
+            color: #005bbf;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface w-full top-0 sticky z-50 shadow-sm flex justify-between items-center px-margin-mobile py-sm h-[64px]">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">edit_document</span>
+<h1 class="font-title-lg text-title-lg text-primary">EducAR Gestión</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest border border-outline-variant">
+<img alt="User" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling primary school teacher in a bright, modern school environment with soft natural lighting and a clean, institutional blue and white background palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAUVtXZZcX51Y6kzOJJRkgkGQMRnW59JNyAwdYz2d66ZjUarB0zfJw_7G2YF6rZc7GpQH44GoMSBExIodVm9OFxU8QbUZxnLATUMl6z2BCTfEvgTSoSX6a5W2TmOHA2P-eXKlxcocvclkzDR1Rt1OLr5B3ZAdC4WYi-_nVgRibJ4pgK5Hnx1U8cwzLaM_NO2wQyocQSs8wn29GyfCegZciKbV4psNydEjzd17TM7Ult8A3w7HMi6wKXMLECjzj_5ZwmGlw75CPGpJC">
+</div>
+</div>
+</header>
+<main class="px-margin-mobile pt-md space-y-md">
+<!-- Selection Context -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/30 space-y-md">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Select: Curso -->
+<div class="relative group">
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-xs ml-xs">Curso</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container rounded-lg border-none px-md text-body-lg appearance-none focus:ring-2 focus:ring-primary">
+<option>5to Grado "A"</option>
+<option>5to Grado "B"</option>
+<option>6to Grado "A"</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Select: Materia -->
+<div class="relative group">
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-xs ml-xs">Materia</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container rounded-lg border-none px-md text-body-lg appearance-none focus:ring-2 focus:ring-primary">
+<option>Lengua y Literatura</option>
+<option>Matemática</option>
+<option>Ciencias Naturales</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Select: Período -->
+<div class="relative group">
+<label class="block text-label-sm font-label-sm text-on-surface-variant mb-xs ml-xs">Período</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container rounded-lg border-none px-md text-body-lg appearance-none focus:ring-2 focus:ring-primary">
+<option>1er Trimestre</option>
+<option>2do Trimestre</option>
+<option>Examen Final</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Stats Bar -->
+<div class="flex items-center justify-between pt-sm border-t border-outline-variant/20">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm">groups</span>
+<span class="text-label-sm text-on-surface-variant">28 Alumnos cargados</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+<span class="text-label-sm text-on-surface-variant">12/28 Completados</span>
+</div>
+</div>
+</section>
+<!-- Search & Filter -->
+<div class="flex gap-sm overflow-x-auto pb-xs scroll-hide">
+<button class="bg-secondary-container text-on-secondary-container px-md py-xs rounded-full flex items-center gap-xs text-label-lg shrink-0">
+<span class="material-symbols-outlined text-[18px]">sort_by_alpha</span>
+                Orden Alfabético
+            </button>
+<button class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full flex items-center gap-xs text-label-lg shrink-0">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+                Pendientes
+            </button>
+<button class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full flex items-center gap-xs text-label-lg shrink-0">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                Filtros
+            </button>
+</div>
+<!-- Student List -->
+<div class="space-y-sm">
+<!-- Student Card Loop (Mock 1) -->
+<article class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col md:flex-row md:items-center gap-md shadow-sm transition-all hover:border-primary/40 active:scale-[0.99]">
+<div class="flex items-center gap-md flex-1">
+<div class="w-12 h-12 rounded-full bg-primary-fixed-dim text-primary-fixed flex items-center justify-center font-bold text-title-md">
+                        AA
+                    </div>
+<div>
+<h3 class="font-title-md text-on-surface">Agostini, Ana Paula</h3>
+<p class="text-label-sm text-on-surface-variant">Legajo: #44210</p>
+</div>
+</div>
+<div class="flex gap-sm items-center">
+<!-- Nota Input -->
+<div class="w-24">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Nota</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant text-center font-title-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" max="10" min="1" placeholder="0.0" step="0.5" type="number">
+</div>
+<!-- Obs Input -->
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Observación</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant px-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Ej: Participación destacada" type="text">
+</div>
+</div>
+</article>
+<!-- Student Card Loop (Mock 2) -->
+<article class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col md:flex-row md:items-center gap-md shadow-sm transition-all border-l-4 border-l-tertiary">
+<div class="flex items-center gap-md flex-1">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-title-md">
+                        BM
+                    </div>
+<div>
+<div class="flex items-center gap-xs">
+<h3 class="font-title-md text-on-surface">Benitez, Marcos</h3>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-label-sm text-on-surface-variant">Legajo: #44215</p>
+</div>
+</div>
+<div class="flex gap-sm items-center">
+<div class="w-24">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Nota</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant text-center font-title-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none text-primary font-bold" type="number" value="8.5">
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Observación</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant px-md text-body-md" type="text" value="Entrega a tiempo">
+</div>
+</div>
+</article>
+<!-- Student Card Loop (Mock 3) -->
+<article class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col md:flex-row md:items-center gap-md shadow-sm transition-all">
+<div class="flex items-center gap-md flex-1">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed-dim text-on-tertiary-fixed flex items-center justify-center font-bold text-title-md">
+                        CD
+                    </div>
+<div>
+<h3 class="font-title-md text-on-surface">Cáceres, Daniela</h3>
+<p class="text-label-sm text-on-surface-variant">Legajo: #44222</p>
+</div>
+</div>
+<div class="flex gap-sm items-center">
+<div class="w-24">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Nota</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant text-center font-title-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0.0" type="number">
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-xs ml-1">Observación</label>
+<input class="w-full h-12 bg-surface-container-low rounded-lg border border-outline-variant px-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Añadir nota privada..." type="text">
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- FAB Action Button -->
+<button class="fixed bottom-24 right-6 bg-primary text-on-primary w-[140px] h-14 rounded-full shadow-lg flex items-center justify-center gap-sm transition-transform active:scale-95 z-40">
+<span class="material-symbols-outlined">save</span>
+<span class="font-label-lg text-label-lg">Guardar</span>
+</button>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface dark:bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-[80px] pb-safe">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-lg py-xs transition-transform active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-sm text-label-sm">Calificar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</button>
+</nav>
+<script>
+        // Simple Micro-interaction for inputs
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const val = parseFloat(e.target.value);
+                const card = e.target.closest('article');
+                if (val >= 7) {
+                    card.classList.add('border-l-4', 'border-l-tertiary');
+                } else if (val < 4 && val > 0) {
+                    card.classList.add('border-l-4', 'border-l-error');
+                } else {
+                    card.classList.remove('border-l-4', 'border-l-tertiary', 'border-l-error');
+                }
+            });
+        });
+
+        // Mass entry "Tab" simulation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const current = document.activeElement;
+                if (current.tagName === 'INPUT') {
+                    const allInputs = Array.from(document.querySelectorAll('input'));
+                    const index = allInputs.indexOf(current);
+                    if (index > -1 && index < allInputs.length - 1) {
+                        allInputs[index + 1].focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+    </script>
+</body></html>

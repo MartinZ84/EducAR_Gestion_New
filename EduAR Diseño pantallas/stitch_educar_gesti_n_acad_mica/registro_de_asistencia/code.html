@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Registro de Asistencia - EducAR Gestión</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#89fa9b",
+                    "primary": "#005bbf",
+                    "outline": "#727785",
+                    "primary-container": "#1a73e8",
+                    "tertiary": "#006d2c",
+                    "on-surface": "#181c20",
+                    "on-tertiary-fixed": "#002108",
+                    "surface-container": "#eceef3",
+                    "surface-variant": "#e0e2e7",
+                    "on-secondary-container": "#00285c",
+                    "background": "#f7f9fe",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f7f9fe",
+                    "surface-dim": "#d8dadf",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#f1f4f9",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "tertiary-fixed-dim": "#6ddd81",
+                    "on-background": "#181c20",
+                    "inverse-primary": "#adc7ff",
+                    "tertiary-container": "#008939",
+                    "inverse-on-surface": "#eff1f6",
+                    "primary-fixed-dim": "#adc7ff",
+                    "surface-tint": "#005bc0",
+                    "surface-bright": "#f7f9fe",
+                    "surface-container-highest": "#e0e2e7",
+                    "on-tertiary-container": "#ffffff",
+                    "on-primary-container": "#ffffff",
+                    "outline-variant": "#c1c6d6",
+                    "surface-container-high": "#e6e8ed",
+                    "on-surface-variant": "#414754",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2d3135",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-primary-fixed": "#001a41",
+                    "secondary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#4d8efe",
+                    "on-secondary-fixed-variant": "#004494",
+                    "primary-fixed": "#d8e2ff",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "secondary": "#005ac1",
+                    "on-secondary-fixed": "#001a41"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "margin-mobile": "16px",
+                    "gutter-mobile": "12px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "display-lg": ["Roboto Flex"],
+                    "title-lg": ["Roboto Flex"],
+                    "label-lg": ["Roboto Flex"],
+                    "label-sm": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-md": ["Roboto Flex"],
+                    "title-md": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .attendance-toggle:checked + .toggle-bg {
+            background-color: #008939; /* tertiary-container mapping */
+        }
+        .attendance-toggle:checked + .toggle-bg .toggle-circle {
+            transform: translateX(24px);
+        }
+        .student-card-active {
+            border-left: 4px solid #006d2c;
+            background-color: #f1f4f9;
+        }
+        .student-card-inactive {
+            border-left: 4px solid #ba1a1a;
+            background-color: #ffffff;
+        }
+        body {
+            background-color: #f7f9fe;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-surface flex justify-between items-center px-margin-mobile py-sm w-full shadow-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="Avatar" data-alt="A professional headshot of a female primary school teacher with a friendly expression. She is in a brightly lit academic setting with soft, natural light and a blurred classroom background. The style is modern, high-quality corporate photography with clean lines and a professional tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpTZ7zhchv-tU8obuAruwzOp0cEDIqnE2Hl8WFNHkARKjAobugGC3Oa-5sIW3MPUYmVXyLDTUxAHUnsiGpNbVnSRyz4AdHqTY12m6HBW_wUisHosN7OhmmbjIULUk_ADwJM96A0mg7y8Cz9a7sOtf1GzK9OEB_A_uqbvtHwIoa-4sqf2M-fTywzGa-XRWk1R1uaXDR3bo7V8PhORhj1h5B1__SGOIzgUpLARxhBU7sGCcuYnAMLy7G6awkv3XcySuV1f8uhvFtCZXh">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">EducAR Gestión</h1>
+</div>
+<button class="material-symbols-outlined text-primary p-xs active:scale-95 transition-transform">notifications</button>
+</header>
+<!-- Context Selector (Course & Date) -->
+<section class="px-margin-mobile pt-md pb-sm bg-surface">
+<div class="flex flex-col gap-sm">
+<h2 class="font-title-lg text-title-lg text-on-surface">Registro de Asistencia</h2>
+<div class="flex gap-sm">
+<div class="flex-1 bg-surface-container-low rounded-xl px-md py-sm flex items-center justify-between border border-outline-variant">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Curso</span>
+<span class="font-title-md text-title-md text-on-surface">5° Año - División A</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+<div class="bg-surface-container-low rounded-xl px-md py-sm flex items-center border border-outline-variant">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fecha</span>
+<span class="font-title-md text-title-md text-on-surface">24 Oct</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters/Stats Quick Bar -->
+<section class="px-margin-mobile py-sm flex gap-xs overflow-x-auto no-scrollbar">
+<div class="bg-primary-container text-on-primary-container px-md py-xs rounded-full font-label-lg text-label-lg whitespace-nowrap">
+            Todos (32)
+        </div>
+<div class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-lg text-label-lg whitespace-nowrap">
+            Presentes: <span id="present-count">0</span>
+</div>
+<div class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-lg text-label-lg whitespace-nowrap">
+            Ausentes: <span id="absent-count">32</span>
+</div>
+</section>
+<!-- Students List -->
+<main class="flex-1 px-margin-mobile pb-32 space-y-sm">
+<!-- Student Card Loop (Mock Data) -->
+<div class="student-item" data-present="false">
+<div class="student-card flex items-center justify-between p-md rounded-xl shadow-sm student-card-inactive transition-all duration-200">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface opacity-50">01</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Alvarez, Martina</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 45.123.889</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only attendance-toggle" onchange="toggleAttendance(this)" type="checkbox">
+<div class="toggle-bg w-14 h-8 bg-error-container rounded-full transition-colors duration-300 flex items-center px-1">
+<div class="toggle-circle w-6 h-6 bg-white rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-error toggle-icon">close</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="student-item" data-present="false">
+<div class="student-card flex items-center justify-between p-md rounded-xl shadow-sm student-card-inactive transition-all duration-200">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface opacity-50">02</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Benitez, Lucas</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 46.554.211</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only attendance-toggle" onchange="toggleAttendance(this)" type="checkbox">
+<div class="toggle-bg w-14 h-8 bg-error-container rounded-full transition-colors duration-300 flex items-center px-1">
+<div class="toggle-circle w-6 h-6 bg-white rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-error toggle-icon">close</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="student-item" data-present="false">
+<div class="student-card flex items-center justify-between p-md rounded-xl shadow-sm student-card-inactive transition-all duration-200">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface opacity-50">03</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Cáceres, Julieta</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 45.998.001</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only attendance-toggle" onchange="toggleAttendance(this)" type="checkbox">
+<div class="toggle-bg w-14 h-8 bg-error-container rounded-full transition-colors duration-300 flex items-center px-1">
+<div class="toggle-circle w-6 h-6 bg-white rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-error toggle-icon">close</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="student-item" data-present="false">
+<div class="student-card flex items-center justify-between p-md rounded-xl shadow-sm student-card-inactive transition-all duration-200">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface opacity-50">04</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Duarte, Santiago</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 44.221.777</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only attendance-toggle" onchange="toggleAttendance(this)" type="checkbox">
+<div class="toggle-bg w-14 h-8 bg-error-container rounded-full transition-colors duration-300 flex items-center px-1">
+<div class="toggle-circle w-6 h-6 bg-white rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-error toggle-icon">close</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="student-item" data-present="false">
+<div class="student-card flex items-center justify-between p-md rounded-xl shadow-sm student-card-inactive transition-all duration-200">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface opacity-50">05</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Espinoza, Valentina</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 46.111.333</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only attendance-toggle" onchange="toggleAttendance(this)" type="checkbox">
+<div class="toggle-bg w-14 h-8 bg-error-container rounded-full transition-colors duration-300 flex items-center px-1">
+<div class="toggle-circle w-6 h-6 bg-white rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-error toggle-icon">close</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+</main>
+<!-- Sticky Footer CTA -->
+<div class="fixed bottom-[80px] left-0 w-full px-margin-mobile py-sm bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+<button class="pointer-events-auto w-full bg-primary text-on-primary py-md rounded-xl font-title-md text-title-md flex items-center justify-center gap-sm shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined">save</span>
+            Guardar Asistencia
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface dark:bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-[80px] pb-safe">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-lg py-xs transition-colors hover:bg-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant transition-colors hover:bg-surface-variant">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-sm text-label-sm">Mensajes</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant transition-colors hover:bg-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</div>
+</nav>
+<script>
+        function toggleAttendance(checkbox) {
+            const card = checkbox.closest('.student-card');
+            const item = checkbox.closest('.student-item');
+            const icon = card.querySelector('.toggle-icon');
+            const toggleBg = card.querySelector('.toggle-bg');
+            
+            if (checkbox.checked) {
+                card.classList.remove('student-card-inactive');
+                card.classList.add('student-card-active');
+                icon.innerText = 'check';
+                icon.classList.remove('text-error');
+                icon.classList.add('text-tertiary');
+                toggleBg.classList.remove('bg-error-container');
+                toggleBg.classList.add('bg-tertiary-container');
+                item.setAttribute('data-present', 'true');
+            } else {
+                card.classList.remove('student-card-active');
+                card.classList.add('student-card-inactive');
+                icon.innerText = 'close';
+                icon.classList.remove('text-tertiary');
+                icon.classList.add('text-error');
+                toggleBg.classList.remove('bg-tertiary-container');
+                toggleBg.classList.add('bg-error-container');
+                item.setAttribute('data-present', 'false');
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = document.querySelectorAll('.student-item').length;
+            const present = document.querySelectorAll('.student-item[data-present="true"]').length;
+            const absent = total - present;
+            
+            document.getElementById('present-count').innerText = present;
+            document.getElementById('absent-count').innerText = absent;
+        }
+
+        // Initialize counts on load
+        window.addEventListener('DOMContentLoaded', updateStats);
+    </script>
+</body></html>

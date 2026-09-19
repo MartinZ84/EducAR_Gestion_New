@@ -1,0 +1,273 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>EducAR Gestión - Dashboard Administrador</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#89fa9b",
+                    "primary": "#005bbf",
+                    "outline": "#727785",
+                    "primary-container": "#1a73e8",
+                    "tertiary": "#006d2c",
+                    "on-surface": "#181c20",
+                    "on-tertiary-fixed": "#002108",
+                    "surface-container": "#eceef3",
+                    "surface-variant": "#e0e2e7",
+                    "on-secondary-container": "#00285c",
+                    "background": "#f7f9fe",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f7f9fe",
+                    "surface-dim": "#d8dadf",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#f1f4f9",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "tertiary-fixed-dim": "#6ddd81",
+                    "on-background": "#181c20",
+                    "inverse-primary": "#adc7ff",
+                    "tertiary-container": "#008939",
+                    "inverse-on-surface": "#eff1f6",
+                    "primary-fixed-dim": "#adc7ff",
+                    "surface-tint": "#005bc0",
+                    "surface-bright": "#f7f9fe",
+                    "surface-container-highest": "#e0e2e7",
+                    "on-tertiary-container": "#ffffff",
+                    "on-primary-container": "#ffffff",
+                    "outline-variant": "#c1c6d6",
+                    "surface-container-high": "#e6e8ed",
+                    "on-surface-variant": "#414754",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2d3135",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-primary-fixed": "#001a41",
+                    "secondary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#4d8efe",
+                    "on-secondary-fixed-variant": "#004494",
+                    "primary-fixed": "#d8e2ff",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "secondary": "#005ac1",
+                    "on-secondary-fixed": "#001a41"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "margin-mobile": "16px",
+                    "gutter-mobile": "12px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "display-lg": ["Roboto Flex"],
+                    "title-lg": ["Roboto Flex"],
+                    "label-lg": ["Roboto Flex"],
+                    "label-sm": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-md": ["Roboto Flex"],
+                    "title-md": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Roboto Flex', sans-serif;
+            background-color: #f7f9fe;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .card-shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        .active-nav-glow {
+            box-shadow: 0 0 12px rgba(26, 115, 232, 0.2);
+        }
+        @supports(padding: max(0px)) {
+            .pb-safe {
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface bg-surface-container dark:bg-surface-container shadow-sm flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container flex items-center justify-center">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a primary school administrator in a bright, modern academic office. The lighting is soft and natural, emphasizing a trustworthy and institutional atmosphere. The background features blurred educational bookshelves and soft blue architectural accents. High-quality digital photography with a corporate, professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDNqr-371FHkAD8HJJsv9NgWGs_s-YN0OEKI_WQDQKwfqb0g1YKFeL95_GkecrwBKkzAOE-U9vZqa2hKedis4Okm2YPyJyc82R14UIqpIYurIOxc1iDDk532oISosWvX-qdLhIQDnM7OIPYhp7XsJfxIO-Shf5ac8CeDDa4EINh5byrmZeYcapwHkAs1Od2kn7laDHEOsTLDZ8e21M4PzFRx7zkBE0ufy5Gw5UdirYYxah7FCz8XMYxXJi2nw8Z_dEy7Te576K2QFR">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed">EducAR Gestión</h1>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed p-xs active:scale-95 transition-transform hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-full">
+            notifications
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile py-lg mb-24 max-w-screen-xl mx-auto w-full">
+<!-- Welcome Section -->
+<section class="mb-xl">
+<p class="font-label-lg text-label-lg text-on-surface-variant mb-xs">Bienvenido,</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Administrador General</h2>
+<div class="mt-md h-1 bg-outline-variant/30 rounded-full w-12"></div>
+</section>
+<!-- Bento-ish Grid of Action Cards -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
+<!-- Docentes Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">school</span>
+<span class="font-title-md text-title-md text-on-surface">Docentes</span>
+</button>
+<!-- Tutores Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">family_restroom</span>
+<span class="font-title-md text-title-md text-on-surface">Tutores</span>
+</button>
+<!-- Alumnos Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">group</span>
+<span class="font-title-md text-title-md text-on-surface">Alumnos</span>
+</button>
+<!-- Cursos Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">class</span>
+<span class="font-title-md text-title-md text-on-surface">Cursos</span>
+</button>
+<!-- Materias Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">menu_book</span>
+<span class="font-title-md text-title-md text-on-surface">Materias</span>
+</button>
+<!-- Usuarios Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">manage_accounts</span>
+<span class="font-title-md text-title-md text-on-surface">Usuarios</span>
+</button>
+<!-- Ciclos Lectivos Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">calendar_month</span>
+<span class="font-title-md text-title-md text-on-surface">Ciclos Lectivos</span>
+</button>
+<!-- Períodos de Evaluación Card -->
+<button class="flex flex-col items-start p-md bg-surface-container-lowest rounded-xl border border-outline-variant card-shadow hover:bg-surface-container-high transition-colors text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px] mb-md">pending_actions</span>
+<span class="font-title-md text-title-md text-on-surface">Períodos de Evaluación</span>
+</button>
+<!-- Mensajes Card (Spans 2 columns on mobile for emphasis) -->
+<button class="col-span-2 md:col-span-1 lg:col-span-1 flex flex-col items-start p-md bg-secondary-container text-on-secondary-container rounded-xl card-shadow hover:brightness-105 transition-all text-left active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-secondary-container text-[32px] mb-md">mail</span>
+<div class="flex justify-between items-center w-full">
+<span class="font-title-md text-title-md">Mensajes</span>
+<span class="bg-on-secondary-container text-secondary-container px-sm py-xs rounded-full font-label-sm text-label-sm">4 Nuevos</span>
+</div>
+</button>
+</div>
+<!-- Quick Stats / Tertiary Info Section -->
+<section class="mt-xl grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-low border border-outline-variant rounded-xl flex items-center gap-md">
+<div class="p-sm bg-tertiary-container/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Asistencia General</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">94% promedio hoy</p>
+</div>
+</div>
+<div class="p-md bg-surface-container-low border border-outline-variant rounded-xl flex items-center gap-md">
+<div class="p-sm bg-primary-container/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">priority_high</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Alertas de Grados</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">2 grados sin calificar</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl shadow-lg bg-surface dark:bg-surface border-t border-outline-variant flex justify-around items-center h-[80px] pb-safe">
+<!-- Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-lg py-xs active-nav-glow active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<!-- Mensajes -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors rounded-full px-lg py-xs active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-sm text-label-sm">Mensajes</span>
+</a>
+<!-- Perfil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors rounded-full px-lg py-xs active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</a>
+</nav>
+<script>
+        // Simple touch feedback and micro-interactions
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.classList.add('opacity-80');
+            });
+            el.addEventListener('touchend', function() {
+                this.classList.remove('opacity-80');
+            });
+        });
+
+        // Dynamic Greeting based on time
+        const hour = new Date().getHours();
+        const greetingEl = document.querySelector('.font-label-lg.text-label-lg');
+        if (hour < 12) {
+            greetingEl.textContent = "Buenos días,";
+        } else if (hour < 19) {
+            greetingEl.textContent = "Buenas tardes,";
+        } else {
+            greetingEl.textContent = "Buenas noches,";
+        }
+    </script>
+</body></html>

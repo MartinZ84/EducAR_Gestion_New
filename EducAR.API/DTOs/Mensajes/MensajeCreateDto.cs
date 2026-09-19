@@ -4,9 +4,8 @@ namespace EducAR.API.DTOs.Mensajes;
 
 public class MensajeCreateDto
 {
-    [Required(ErrorMessage = "El destinatario es obligatorio.")]
-    [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un destinatario válido.")]
     public int IdUsuarioDestinat { get; set; }
+    public List<int> IdsUsuariosDestinatarios { get; set; } = new();
 
     [Required(ErrorMessage = "El asunto es obligatorio.")]
     [MaxLength(200, ErrorMessage = "El asunto no puede superar los 200 caracteres.")]

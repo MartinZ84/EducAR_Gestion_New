@@ -163,6 +163,9 @@ public class AlumnoService : IAlumnoService
         if (alumno is null)
             return (false, "Alumno no encontrado.");
 
+        if (alumno.AlumnoTutores.Count(at => at.Activo) <= 1)
+            return (false, "El alumno debe conservar al menos un tutor asignado.");
+
         var exito = await _alumnoRepository.QuitarTutor(idAlumno, idTutor);
         if (!exito)
             return (false, "El tutor no tiene una asociación activa con ese alumno.");

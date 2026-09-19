@@ -135,6 +135,10 @@ public class DocenteMateriaCursoService : IDocenteMateriaCursoService
         NombreMateria         = dmc.Materia.Nombre,
         IdCurso               = dmc.IdCurso,
         Curso                 = $"{dmc.Curso.Grado}° {dmc.Curso.Division} - {dmc.Curso.CicloLectivo.Anio}",
+        Grado                 = dmc.Curso.Grado,
+        Division              = dmc.Curso.Division,
+        Turno                 = dmc.Curso.Turno,
+        Anio                  = dmc.Curso.CicloLectivo.Anio,
         FechaAsignacion       = dmc.FechaAsignacion,
         Activo                = dmc.Activo
     };

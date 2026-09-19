@@ -104,6 +104,11 @@ public class AlumnoTutorService : IAlumnoTutorService
         if (relacion.Alumno.IdEscuela != idEscuela)
             return (false, "No tiene permisos para modificar esta relación.");
 
+        var cantidadTutores = await _context.AlumnoTutores
+            .CountAsync(at => at.IdAlumno == relacion.IdAlumno && at.Activo);
+        if (cantidadTutores <= 1)
+            return (false, "El alumno debe conservar al menos un tutor asignado.");
+
         var exito = await _alumnoTutorRepository.Eliminar(idAlumnoTutor, idEscuela);
         return exito
             ? (true, "Tutor desasociado del alumno correctamente.")
@@ -128,11 +133,13 @@ public class AlumnoTutorService : IAlumnoTutorService
     {
         // Obtener el IdTutor a partir del IdUsuario del token
         var tutor = await _context.Tutores
-            .FirstOrDefaultAsync(t => t.IdUsuario == idUsuario);
+            .FirstOrDefaultAsync(t => t.IdUsuario == idUsuario &&
+                                      t.Usuario.IdEscuela == idEscuela && t.Usuario.Activo);
 
         if (tutor is null) return new List<AlumnoTutorResponseDto>();
 
         var relaciones = await _alumnoTutorRepository.ObtenerPorTutor(tutor.IdTutor);
-        return relaciones.Select(MapearAResponseDto).ToList();
+        return relaciones.Where(r => r.Alumno.IdEscuela == idEscuela && r.Alumno.Activo)
+            .Select(MapearAResponseDto).ToList();
     }
 }

@@ -28,6 +28,8 @@ public class AlumnoRepository : IAlumnoRepository
             .Include(a => a.Matriculas)
                 .ThenInclude(m => m.Curso)
                     .ThenInclude(c => c.CicloLectivo)
+            .Include(a => a.Matriculas)
+                .ThenInclude(m => m.CicloLectivo)
             .Include(a => a.AlumnoTutores)
                 .ThenInclude(at => at.Tutor)
                     .ThenInclude(t => t.Usuario)
@@ -39,6 +41,7 @@ public class AlumnoRepository : IAlumnoRepository
     {
         return await _context.Alumnos.AsNoTracking()
             .Include(a => a.Matriculas).ThenInclude(m => m.Curso).ThenInclude(c => c.CicloLectivo)
+            .Include(a => a.Matriculas).ThenInclude(m => m.CicloLectivo)
             .Include(a => a.AlumnoTutores).ThenInclude(at => at.Tutor).ThenInclude(t => t.Usuario)
             .Include(a => a.Asistencias)
             .Include(a => a.Calificaciones).ThenInclude(c => c.Materia)

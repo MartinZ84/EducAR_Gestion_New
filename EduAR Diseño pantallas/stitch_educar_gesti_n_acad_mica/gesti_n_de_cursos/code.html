@@ -1,0 +1,287 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#89fa9b",
+                        "primary": "#005bbf",
+                        "outline": "#727785",
+                        "primary-container": "#1a73e8",
+                        "tertiary": "#006d2c",
+                        "on-surface": "#181c20",
+                        "on-tertiary-fixed": "#002108",
+                        "surface-container": "#eceef3",
+                        "surface-variant": "#e0e2e7",
+                        "on-secondary-container": "#00285c",
+                        "background": "#f7f9fe",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f7f9fe",
+                        "surface-dim": "#d8dadf",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f4f9",
+                        "on-tertiary-fixed-variant": "#005320",
+                        "tertiary-fixed-dim": "#6ddd81",
+                        "on-background": "#181c20",
+                        "inverse-primary": "#adc7ff",
+                        "tertiary-container": "#008939",
+                        "inverse-on-surface": "#eff1f6",
+                        "primary-fixed-dim": "#adc7ff",
+                        "surface-tint": "#005bc0",
+                        "surface-bright": "#f7f9fe",
+                        "surface-container-highest": "#e0e2e7",
+                        "on-tertiary-container": "#ffffff",
+                        "on-primary-container": "#ffffff",
+                        "outline-variant": "#c1c6d6",
+                        "surface-container-high": "#e6e8ed",
+                        "on-surface-variant": "#414754",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2d3135",
+                        "on-primary-fixed-variant": "#004493",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#4d8efe",
+                        "on-secondary-fixed-variant": "#004494",
+                        "primary-fixed": "#d8e2ff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "secondary": "#005ac1",
+                        "on-secondary-fixed": "#001a41"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "margin-mobile": "16px",
+                        "gutter-mobile": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Roboto Flex"],
+                        "headline-lg": ["Roboto Flex"],
+                        "display-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "label-sm": ["Roboto Flex"],
+                        "headline-lg-mobile": ["Roboto Flex"],
+                        "body-md": ["Roboto Flex"],
+                        "title-md": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                        "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                        "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Roboto Flex', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .safe-area-inset-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile py-sm w-full">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a primary school teacher, a friendly Hispanic woman with a warm smile, wearing professional academic attire. The background is a soft-focus classroom with educational posters, maintaining a bright, professional light-mode aesthetic with institutional blue and white tones. High-quality corporate photography style with natural window lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqd-MzTo5bJzNm_9KvxWxo8ydT2MK1e7LK9BIm3T8zzYkaCBQlihNZwePacIi4eA35bIBitVrremDoDeDkIIKr6Ut2Pc2veO-xTWqBftyTxrRuHtsbuA0GDtw4i1pKH3kOcAV4llg-M6RNdKezHo8QrSr5FXyA3-pirpfTompA2Wr0DEs6HmCAzBaWWPmpo-Cw4f2VnjdPf7SLBKQzkA55pnQ8O-TaXWWM3U5UsSUNg_nlzbfmGVScTu9aNs6MLrBD7bH1BDDaVH08">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed">EducAR Gestión</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors p-sm rounded-full active:scale-95 transition-transform">
+                notifications
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile pt-lg pb-xl space-y-lg">
+<!-- Header Section -->
+<section class="flex flex-col gap-xs">
+<h2 class="font-title-lg text-title-lg text-on-surface">Gestión de Cursos</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Administra tus grados, divisiones y ciclos lectivos vigentes.</p>
+</section>
+<!-- Filters/Chips Row -->
+<section class="flex gap-sm overflow-x-auto pb-xs no-scrollbar">
+<div class="flex-shrink-0 bg-secondary-container text-on-secondary-container px-md py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span>Todos los años</span>
+</div>
+<div class="flex-shrink-0 bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-lg text-label-lg border border-outline-variant">
+<span>Turno Mañana</span>
+</div>
+<div class="flex-shrink-0 bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-lg text-label-lg border border-outline-variant">
+<span>Turno Tarde</span>
+</div>
+</section>
+<!-- Bento Grid of Course Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Course Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-md shadow-sm active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-primary">5° Grado "A"</span>
+<div class="flex items-center gap-xs text-on-surface-variant mt-xs">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-lg text-label-lg">Turno Mañana</span>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-[2px] rounded-lg font-label-sm text-label-sm">Activo</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ciclo Lectivo</span>
+<span class="font-title-md text-title-md text-on-surface">2024</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-dim flex items-center justify-center text-[10px] font-bold">24</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary-container text-on-primary-container flex items-center justify-center text-[10px] font-bold">AL</div>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-md shadow-sm active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-primary">4° Grado "B"</span>
+<div class="flex items-center gap-xs text-on-surface-variant mt-xs">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-lg text-label-lg">Turno Tarde</span>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-[2px] rounded-lg font-label-sm text-label-sm">Activo</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ciclo Lectivo</span>
+<span class="font-title-md text-title-md text-on-surface">2024</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">arrow_forward_ios</span>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-md shadow-sm active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-primary">6° Grado "C"</span>
+<div class="flex items-center gap-xs text-on-surface-variant mt-xs">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-lg text-label-lg">Turno Mañana</span>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-[2px] rounded-lg font-label-sm text-label-sm">Activo</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ciclo Lectivo</span>
+<span class="font-title-md text-title-md text-on-surface">2024</span>
+</div>
+<div class="flex gap-xs">
+<button class="material-symbols-outlined p-xs text-on-surface-variant">edit</button>
+<button class="material-symbols-outlined p-xs text-on-surface-variant">more_vert</button>
+</div>
+</div>
+</div>
+<!-- Course Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-md shadow-sm active:scale-[0.98] transition-transform cursor-pointer opacity-70">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-on-surface-variant">5° Grado "B"</span>
+<div class="flex items-center gap-xs text-on-surface-variant mt-xs">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-label-lg text-label-lg">Turno Tarde</span>
+</div>
+</div>
+<span class="bg-surface-container-high text-on-surface-variant px-sm py-[2px] rounded-lg font-label-sm text-label-sm">Finalizado</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ciclo Lectivo</span>
+<span class="font-title-md text-title-md text-on-surface">2023</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">folder_open</span>
+</div>
+</div>
+</section>
+<!-- Info Card for empty state hint or global stats -->
+<section class="bg-primary-container text-on-primary-container p-lg rounded-2xl flex items-center gap-md relative overflow-hidden">
+<div class="flex-grow z-10">
+<h3 class="font-title-md text-title-md">Resumen Institucional</h3>
+<p class="font-body-md text-body-md opacity-90 mt-xs">3 cursos activos • 82 alumnos matriculados • Ciclo 2024</p>
+</div>
+<span class="material-symbols-outlined text-[64px] absolute -right-4 -bottom-4 opacity-20">school</span>
+</section>
+</main>
+<!-- FAB: Floating Action Button -->
+<button class="fixed bottom-24 right-md w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface dark:bg-surface border-t border-outline-variant shadow-lg h-[80px] safe-area-inset-bottom">
+<div class="flex justify-around items-center w-full h-full pb-xs">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors rounded-full px-lg py-xs" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-lg py-xs" href="#">
+<span class="material-symbols-outlined" data-icon="school" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-sm text-label-sm">Cursos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors rounded-full px-lg py-xs" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="font-label-sm text-label-sm">Mensajes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors rounded-full px-lg py-xs" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</a>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.cursor-pointer').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.add('bg-surface-container-high');
+                setTimeout(() => {
+                    this.classList.remove('bg-surface-container-high');
+                }, 150);
+            });
+        });
+    </script>
+</body></html>

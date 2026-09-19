@@ -53,17 +53,29 @@ public class MensajeServiceTests
         var rol2 = TestDataBuilder.BuildRol(2, "Docente");
 
         var usuario1 = TestDataBuilder.BuildUsuario(1, 1, 1, "admin", "Administrador");
+        var rol3 = TestDataBuilder.BuildRol(3, "Tutor");
         var usuario2 = TestDataBuilder.BuildUsuario(2, 2, 1, "docente", "Docente");
+        var usuario3 = TestDataBuilder.BuildUsuario(3, 3, 1, "tutor", "Tutor");
 
         // REUTILIZAR las mismas instancias para evitar duplicados en el tracker de EF Core
         usuario1.Escuela = escuela;
         usuario1.Rol = rol1;
         usuario2.Escuela = escuela;
         usuario2.Rol = rol2;
+        usuario3.Escuela = escuela;
+        usuario3.Rol = rol3;
 
         _context.Escuelas.Add(escuela);
-        _context.Roles.AddRange(rol1, rol2);
-        _context.Usuarios.AddRange(usuario1, usuario2);
+        _context.Roles.AddRange(rol1, rol2, rol3);
+        _context.Usuarios.AddRange(usuario1, usuario2, usuario3);
+        _context.Docentes.Add(new Docente { IdDocente = 1, IdUsuario = 2, Usuario = usuario2 });
+        _context.Tutores.Add(new Tutor { IdTutor = 1, IdUsuario = 3, Usuario = usuario3 });
+        _context.Alumnos.Add(new Alumno { IdAlumno = 1, IdEscuela = 1, Escuela = escuela, Nombre = "Alumno", Apellido = "Test", Activo = true });
+        _context.CiclosLectivos.Add(new CicloLectivo { IdCicloLectivo = 1, IdEscuela = 1, Escuela = escuela, Anio = DateTime.Now.Year, FechaInicio = new DateTime(DateTime.Now.Year, 3, 1), FechaFin = new DateTime(DateTime.Now.Year, 12, 15), Activo = true });
+        _context.Cursos.Add(new Curso { IdCurso = 1, IdEscuela = 1, IdCicloLectivo = 1, Escuela = escuela, Activo = true, Division = "A" });
+        _context.Matriculas.Add(new Matricula { IdMatricula = 1, IdEscuela = 1, IdAlumno = 1, IdCurso = 1, IdCicloLectivo = 1, Estado = EstadoMatricula.Activa });
+        _context.AlumnoTutores.Add(new AlumnoTutor { IdAlumnoTutor = 1, IdAlumno = 1, IdTutor = 1, Activo = true });
+        _context.DocenteMateriaCursos.Add(new DocenteMateriaCurso { IdDocenteMateriaCurso = 1, IdDocente = 1, IdCurso = 1, IdMateria = 1, Activo = true });
         _context.SaveChanges();
     }
 
@@ -73,7 +85,7 @@ public class MensajeServiceTests
         // Arrange
         var dto = new MensajeCreateDto
         {
-            IdUsuarioDestinat = 2,
+            IdUsuarioDestinat = 3,
             Asunto = "Test",
             MensajeTexto = "Mensaje de prueba"
         };
@@ -82,12 +94,80 @@ public class MensajeServiceTests
                         .ReturnsAsync((Mensaje m) => { m.IdMensaje = 1; return m; });
 
         // Act
-        var (exito, mensaje) = await _service.Enviar(dto, 1, 1);
+        var (exito, mensaje) = await _service.Enviar(dto, 2, 1);
 
         // Assert
         exito.Should().BeTrue();
         mensaje.Should().Be("Mensaje enviado correctamente.");
         _mensajeRepoMock.Verify(r => r.Crear(It.IsAny<Mensaje>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Enviar_TutorVinculado_PuedeResponder()
+    {
+        _mensajeRepoMock.Setup(r => r.Crear(It.IsAny<Mensaje>()))
+            .ReturnsAsync((Mensaje m) => m);
+        var resultado = await _service.Enviar(new MensajeCreateDto
+        {
+            IdUsuarioDestinat = 2, Asunto = "Consulta", MensajeTexto = "¿Cómo está el alumno?"
+        }, 3, 1);
+        resultado.exito.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Enviar_VariosTutores_CreaUnMensajeParaCadaDestinatario()
+    {
+        var rolTutor = await _context.Roles.FindAsync(3);
+        var escuela = await _context.Escuelas.FindAsync(1);
+        var usuario = TestDataBuilder.BuildUsuario(4, 3, 1, "tutor2", "Tutor dos");
+        usuario.Rol = rolTutor!; usuario.Escuela = escuela!;
+        _context.Usuarios.Add(usuario);
+        _context.Tutores.Add(new Tutor { IdTutor = 2, IdUsuario = 4, Usuario = usuario });
+        _context.AlumnoTutores.Add(new AlumnoTutor { IdAlumnoTutor = 2, IdAlumno = 1, IdTutor = 2, Activo = true });
+        await _context.SaveChangesAsync();
+        _mensajeRepoMock.Setup(r => r.Crear(It.IsAny<Mensaje>())).ReturnsAsync((Mensaje m) => m);
+
+        var resultado = await _service.Enviar(new MensajeCreateDto
+        {
+            IdsUsuariosDestinatarios = new() { 3, 4 }, Asunto = "Reunión", MensajeTexto = "Información"
+        }, 2, 1);
+
+        resultado.exito.Should().BeTrue();
+        _mensajeRepoMock.Verify(r => r.Crear(It.IsAny<Mensaje>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task ObtenerDestinatarios_ListaUnaOpcionPorAlumnoAunqueCompartanTutor()
+    {
+        _context.Alumnos.Add(new Alumno
+            { IdAlumno = 2, IdEscuela = 1, Nombre = "Segundo", Apellido = "Alumno", Activo = true });
+        _context.Matriculas.Add(new Matricula
+            { IdMatricula = 2, IdEscuela = 1, IdAlumno = 2, IdCurso = 1, IdCicloLectivo = 1, Estado = EstadoMatricula.Activa });
+        _context.AlumnoTutores.Add(new AlumnoTutor
+            { IdAlumnoTutor = 2, IdAlumno = 2, IdTutor = 1, Activo = true });
+        await _context.SaveChangesAsync();
+
+        var destinatarios = await _service.ObtenerDestinatarios(2, 1);
+
+        destinatarios.Should().HaveCount(2);
+        destinatarios.Should().OnlyContain(d => d.IdUsuario == 3 && d.Rol == "Tutor");
+        destinatarios.Select(d => d.IdAlumno).Should().BeEquivalentTo(new[] { 1, 2 });
+        destinatarios.Select(d => d.NombreAlumno).Should().OnlyHaveUniqueItems();
+    }
+
+    [Fact]
+    public async Task Enviar_CicloAnterior_RechazaAunqueExisteVinculo()
+    {
+        var ciclo = await _context.CiclosLectivos.FindAsync(1);
+        ciclo!.Anio = DateTime.Now.Year - 1;
+        await _context.SaveChangesAsync();
+
+        var resultado = await _service.Enviar(new MensajeCreateDto
+        {
+            IdUsuarioDestinat = 3, Asunto = "Consulta", MensajeTexto = "Hola"
+        }, 2, 1);
+        resultado.exito.Should().BeFalse();
+        _mensajeRepoMock.Verify(r => r.Crear(It.IsAny<Mensaje>()), Times.Never);
     }
 
     [Fact]
@@ -198,16 +278,4 @@ public class MensajeServiceTests
         resultado.Should().Be(3);
     }
 
-    [Fact]
-    public async Task Eliminar_MensajeExiste_RetornaTrue()
-    {
-        // Arrange
-        _mensajeRepoMock.Setup(r => r.Eliminar(1, 2)).ReturnsAsync(true);
-
-        // Act
-        var resultado = await _service.Eliminar(1, 2);
-
-        // Assert
-        resultado.Should().BeTrue();
-    }
 }

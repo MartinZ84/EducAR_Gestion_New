@@ -47,41 +47,108 @@ public class MensajeService : IMensajeService
 
     public async Task<(bool exito, string mensaje)> Enviar(MensajeCreateDto dto, int idUsuarioRemitente, int idEscuela)
     {
-        // Validar que el destinatario existe y pertenece a la misma escuela
-        var destinatario = await _context.Usuarios
-            .FirstOrDefaultAsync(u => u.IdUsuario == dto.IdUsuarioDestinat &&
-                                      u.IdEscuela == idEscuela &&
-                                      u.Activo);
-
-        if (destinatario is null)
-            return (false, "El destinatario no existe o no pertenece a esta escuela.");
-
-        if (dto.IdUsuarioDestinat == idUsuarioRemitente)
+        // Mantiene compatibilidad con el destinatario individual anterior y agrega
+        // la lista nueva. Distinct impide generar mensajes duplicados para un usuario.
+        var idsDestinatarios = dto.IdsUsuariosDestinatarios.Append(dto.IdUsuarioDestinat)
+            .Where(id => id > 0).Distinct().ToList();
+        if (idsDestinatarios.Count == 0)
+            return (false, "Debe seleccionar al menos un destinatario.");
+        if (idsDestinatarios.Contains(idUsuarioRemitente))
             return (false, "No puede enviarse un mensaje a sí mismo.");
 
-        var mensaje = new Mensaje
-        {
-            IdUsuarioRemitente = idUsuarioRemitente,
-            IdUsuarioDestinat = dto.IdUsuarioDestinat,
-            Asunto = dto.Asunto,
-            MensajeTexto = dto.MensajeTexto,
-            FechaEnvio = DateTime.Now,
-            Leido = false,
-            Activo = true
-        };
+        var cantidadActivos = await _context.Usuarios.CountAsync(u => idsDestinatarios.Contains(u.IdUsuario) && u.IdEscuela == idEscuela && u.Activo);
+        if (cantidadActivos != idsDestinatarios.Count)
+            return (false, "Uno o más destinatarios no existen o no pertenecen a esta escuela.");
 
-        await _mensajeRepository.Crear(mensaje);
-        return (true, "Mensaje enviado correctamente.");
+        // ObtenerDestinatarios aplica la relación docente-curso-alumno-tutor y exige
+        // que el ciclo lectivo sea el actual. Ningún ID enviado por el navegador puede
+        // saltear esa validación, incluso usando la opción "Seleccionar todos".
+        var permitidos = (await ObtenerDestinatarios(idUsuarioRemitente, idEscuela))
+            .Select(u => u.IdUsuario).ToHashSet();
+        if (idsDestinatarios.Any(id => !permitidos.Contains(id)))
+            return (false, "Solo puede enviar mensajes a docentes o tutores vinculados en el ciclo lectivo actual.");
+
+        // Se crea un registro independiente por destinatario. Así cada tutor puede
+        // leer el mensaje por separado y conservar su propio estado Leido.
+        foreach (var idDestinatario in idsDestinatarios)
+            await _mensajeRepository.Crear(new Mensaje
+            {
+                IdUsuarioRemitente = idUsuarioRemitente, IdUsuarioDestinat = idDestinatario,
+                Asunto = dto.Asunto, MensajeTexto = dto.MensajeTexto,
+                FechaEnvio = DateTime.Now, Leido = false, Activo = true
+            });
+
+        return (true, idsDestinatarios.Count == 1
+            ? "Mensaje enviado correctamente."
+            : $"Mensaje enviado a {idsDestinatarios.Count} destinatarios.");
+    }
+
+    public async Task<List<DestinatarioMensajeDto>> ObtenerDestinatarios(int idUsuario, int idEscuela)
+    {
+        // La lista se limita al año actual y al ciclo activo. Para un docente se
+        // obtienen tutores de alumnos de sus cursos; para un tutor, los docentes
+        // de los cursos de sus alumnos vinculados.
+        var anioActual = DateTime.Now.Year;
+        var esDocente = await _context.Docentes.AnyAsync(d =>
+            d.IdUsuario == idUsuario && d.Usuario.IdEscuela == idEscuela && d.Usuario.Activo);
+        var esTutor = await _context.Tutores.AnyAsync(t =>
+            t.IdUsuario == idUsuario && t.Usuario.IdEscuela == idEscuela && t.Usuario.Activo);
+
+        if (!esDocente && !esTutor) return new();
+
+        if (esDocente)
+        {
+            return await (from asignacion in _context.DocenteMateriaCursos
+                  join docente in _context.Docentes on asignacion.IdDocente equals docente.IdDocente
+                  join curso in _context.Cursos on asignacion.IdCurso equals curso.IdCurso
+                  join ciclo in _context.CiclosLectivos on curso.IdCicloLectivo equals ciclo.IdCicloLectivo
+                  join matricula in _context.Matriculas on curso.IdCurso equals matricula.IdCurso
+                  join alumno in _context.Alumnos on matricula.IdAlumno equals alumno.IdAlumno
+                  join relacion in _context.AlumnoTutores on matricula.IdAlumno equals relacion.IdAlumno
+                  join tutor in _context.Tutores on relacion.IdTutor equals tutor.IdTutor
+                  join usuarioTutor in _context.Usuarios on tutor.IdUsuario equals usuarioTutor.IdUsuario
+                  where docente.IdUsuario == idUsuario && asignacion.Activo && curso.Activo &&
+                        curso.IdEscuela == idEscuela && matricula.IdEscuela == idEscuela &&
+                        alumno.IdEscuela == idEscuela && alumno.Activo && usuarioTutor.Activo &&
+                        ciclo.IdEscuela == idEscuela && ciclo.Activo && ciclo.Anio == anioActual &&
+                        matricula.Estado == EstadoMatricula.Activa && relacion.Activo
+                  select new DestinatarioMensajeDto
+                  {
+                      IdUsuario = usuarioTutor.IdUsuario,
+                      IdAlumno = alumno.IdAlumno,
+                      NombreCompleto = usuarioTutor.Nombre + " " + usuarioTutor.Apellido,
+                      NombreAlumno = alumno.Nombre + " " + alumno.Apellido,
+                      Rol = "Tutor"
+                  }).Distinct().OrderBy(x => x.NombreAlumno).ThenBy(x => x.NombreCompleto).ToListAsync();
+        }
+
+        return await (from tutor in _context.Tutores
+                  join relacion in _context.AlumnoTutores on tutor.IdTutor equals relacion.IdTutor
+                  join matricula in _context.Matriculas on relacion.IdAlumno equals matricula.IdAlumno
+                  join alumno in _context.Alumnos on relacion.IdAlumno equals alumno.IdAlumno
+                  join curso in _context.Cursos on matricula.IdCurso equals curso.IdCurso
+                  join ciclo in _context.CiclosLectivos on curso.IdCicloLectivo equals ciclo.IdCicloLectivo
+                  join asignacion in _context.DocenteMateriaCursos on curso.IdCurso equals asignacion.IdCurso
+                  join docente in _context.Docentes on asignacion.IdDocente equals docente.IdDocente
+                  join usuarioDocente in _context.Usuarios on docente.IdUsuario equals usuarioDocente.IdUsuario
+                  where tutor.IdUsuario == idUsuario && relacion.Activo && asignacion.Activo && curso.Activo &&
+                        curso.IdEscuela == idEscuela && matricula.IdEscuela == idEscuela &&
+                        alumno.IdEscuela == idEscuela && alumno.Activo && usuarioDocente.Activo &&
+                        ciclo.IdEscuela == idEscuela && ciclo.Activo && ciclo.Anio == anioActual &&
+                        matricula.Estado == EstadoMatricula.Activa
+                  select new DestinatarioMensajeDto
+                  {
+                      IdUsuario = usuarioDocente.IdUsuario,
+                      IdAlumno = alumno.IdAlumno,
+                      NombreCompleto = usuarioDocente.Nombre + " " + usuarioDocente.Apellido,
+                      NombreAlumno = alumno.Nombre + " " + alumno.Apellido,
+                      Rol = "Docente"
+                  }).Distinct().OrderBy(x => x.NombreAlumno).ThenBy(x => x.NombreCompleto).ToListAsync();
     }
 
     public async Task<bool> MarcarLeido(int idMensaje, int idUsuario)
     {
         return await _mensajeRepository.MarcarLeido(idMensaje, idUsuario);
-    }
-
-    public async Task<bool> Eliminar(int idMensaje, int idUsuario)
-    {
-        return await _mensajeRepository.Eliminar(idMensaje, idUsuario);
     }
 
     public async Task<int> ContarNoLeidos(int idUsuario)

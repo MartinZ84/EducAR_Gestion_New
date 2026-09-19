@@ -1,9 +1,11 @@
 using EducAR.API.DTOs.Matriculas;
+using EducAR.API.Data;
 using EducAR.API.DTOs.Paginacion;
 using EducAR.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducAR.API.Controllers;
 
@@ -13,30 +15,37 @@ namespace EducAR.API.Controllers;
 public class MatriculasController : ControllerBase
 {
     private readonly IMatriculaService _service;
+    private readonly AppDbContext? _context;
 
-    public MatriculasController(IMatriculaService service)
+    public MatriculasController(IMatriculaService service, AppDbContext? context = null)
     {
         _service = service;
+        _context = context;
     }
 
     private int IdEscuelaActual => int.Parse(User.FindFirstValue("IdEscuela")!);
+    private int IdUsuarioActual => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     [HttpGet("curso/{idCurso}")]
     [Authorize(Roles = "Administrador,Docente")]
     public async Task<IActionResult> ObtenerPorCurso(int idCurso)
     {
+        if (User.IsInRole("Docente") && (_context is null ||
+            !await _context.DocenteMateriaCursos.AnyAsync(a => a.IdCurso == idCurso && a.Activo &&
+                a.Docente.IdUsuario == IdUsuarioActual && a.Curso.IdEscuela == IdEscuelaActual)))
+            return Forbid();
         return Ok(await _service.ObtenerPorCurso(idCurso, IdEscuelaActual));
     }
 
     [HttpGet("alumno/{idAlumno}")]
-    [Authorize(Roles = "Administrador,Docente,Tutor")]
+    [Authorize(Roles = "Administrador,Docente")]
     public async Task<IActionResult> ObtenerPorAlumno(int idAlumno)
     {
         return Ok(await _service.ObtenerPorAlumno(idAlumno, IdEscuelaActual));
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Administrador,Docente,Tutor")]
+    [Authorize(Roles = "Administrador,Docente")]
     public async Task<IActionResult> ObtenerPorId(int id)
     {
         var matricula = await _service.ObtenerPorId(id, IdEscuelaActual);

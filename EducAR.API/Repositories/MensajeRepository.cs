@@ -65,17 +65,6 @@ public class MensajeRepository : IMensajeRepository
         return true;
     }
 
-    public async Task<bool> Eliminar(int idMensaje, int idUsuario)
-    {
-        var mensaje = await ObtenerPorId(idMensaje, idUsuario);
-        if (mensaje is null) return false;
-
-        mensaje.Activo = false;
-        mensaje.FechaAct = DateTime.Now;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<int> ContarNoLeidos(int idUsuario)
     {
         return await _context.Mensajes

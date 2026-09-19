@@ -64,6 +64,13 @@ public class MensajesController : ControllerBase
         return Ok(new { noLeidos = cantidad });
     }
 
+    [HttpGet("destinatarios")]
+    [Authorize(Roles = "Docente,Tutor")]
+    public async Task<IActionResult> ObtenerDestinatarios()
+    {
+        return Ok(await _mensajeService.ObtenerDestinatarios(IdUsuarioActual, IdEscuelaActual));
+    }
+
     // GET api/mensajes/5
     [HttpGet("{id}")]
     public async Task<IActionResult> ObtenerPorId(int id)
@@ -75,7 +82,7 @@ public class MensajesController : ControllerBase
 
     // POST api/mensajes
     [HttpPost]
-    [Authorize(Roles = "Administrador,Docente,Tutor")]
+    [Authorize(Roles = "Docente,Tutor")]
     public async Task<IActionResult> Enviar([FromBody] MensajeCreateDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -96,13 +103,4 @@ public class MensajesController : ControllerBase
         return Ok(new { mensaje = "Mensaje marcado como leído." });
     }
 
-    // DELETE api/mensajes/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Eliminar(int id)
-    {
-        var exito = await _mensajeService.Eliminar(id, IdUsuarioActual);
-        if (!exito) return NotFound(new { mensaje = "Mensaje no encontrado." });
-
-        return Ok(new { mensaje = "Mensaje eliminado correctamente." });
-    }
 }

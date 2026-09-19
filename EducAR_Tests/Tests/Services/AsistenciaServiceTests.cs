@@ -14,6 +14,8 @@ public class AsistenciaServiceTests
     private readonly Mock<IAsistenciaRepository> _asistenciaRepoMock;
     private readonly Mock<ICursoRepository>      _cursoRepoMock;
     private readonly Mock<IDocenteRepository>    _docenteRepoMock;
+    private readonly Mock<IDocenteMateriaCursoRepository> _asignacionRepoMock;
+    private readonly Mock<IMatriculaRepository> _matriculaRepoMock;
     private readonly AsistenciaService           _service;
 
     public AsistenciaServiceTests()
@@ -21,11 +23,20 @@ public class AsistenciaServiceTests
         _asistenciaRepoMock = new Mock<IAsistenciaRepository>();
         _cursoRepoMock      = new Mock<ICursoRepository>();
         _docenteRepoMock    = new Mock<IDocenteRepository>();
+        _asignacionRepoMock = new Mock<IDocenteMateriaCursoRepository>();
+        _matriculaRepoMock = new Mock<IMatriculaRepository>();
+
+        _asignacionRepoMock.Setup(r => r.ObtenerPorDocente(It.IsAny<int>()))
+            .ReturnsAsync(new List<DocenteMateriaCurso> { new() { IdCurso = 1 } });
+        _matriculaRepoMock.Setup(r => r.ObtenerPorCurso(1, 1))
+            .ReturnsAsync(new List<Matricula> { new() { IdAlumno = 1 }, new() { IdAlumno = 2 } });
 
         _service = new AsistenciaService(
             _asistenciaRepoMock.Object,
             _cursoRepoMock.Object,
-            _docenteRepoMock.Object);
+            _docenteRepoMock.Object,
+            _asignacionRepoMock.Object,
+            _matriculaRepoMock.Object);
     }
 
     [Fact]
@@ -107,6 +118,44 @@ public class AsistenciaServiceTests
     }
 
     [Fact]
+    public async Task Registrar_DocenteSinAsignacion_NoRegistra()
+    {
+        var docente = TestDataBuilder.BuildDocente();
+        _cursoRepoMock.Setup(r => r.ObtenerPorId(1, 1)).ReturnsAsync(TestDataBuilder.BuildCurso());
+        _docenteRepoMock.Setup(r => r.ObtenerTodos(1)).ReturnsAsync(new List<Docente> { docente });
+        _asignacionRepoMock.Setup(r => r.ObtenerPorDocente(docente.IdDocente))
+            .ReturnsAsync(new List<DocenteMateriaCurso>());
+
+        var resultado = await _service.Registrar(new AsistenciaRegistrarDto
+        {
+            IdCurso = 1,
+            Fecha = DateTime.Today,
+            Alumnos = new() { new() { IdAlumno = 1, Presente = true } }
+        }, docente.IdUsuario, 1);
+
+        resultado.exito.Should().BeFalse();
+        _asistenciaRepoMock.Verify(r => r.RegistrarLote(It.IsAny<List<Asistencia>>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Registrar_AlumnoAjenoAlCurso_NoRegistra()
+    {
+        var docente = TestDataBuilder.BuildDocente();
+        _cursoRepoMock.Setup(r => r.ObtenerPorId(1, 1)).ReturnsAsync(TestDataBuilder.BuildCurso());
+        _docenteRepoMock.Setup(r => r.ObtenerTodos(1)).ReturnsAsync(new List<Docente> { docente });
+
+        var resultado = await _service.Registrar(new AsistenciaRegistrarDto
+        {
+            IdCurso = 1,
+            Fecha = DateTime.Today,
+            Alumnos = new() { new() { IdAlumno = 1, Presente = true }, new() { IdAlumno = 99, Presente = false } }
+        }, docente.IdUsuario, 1);
+
+        resultado.exito.Should().BeFalse();
+        _asistenciaRepoMock.Verify(r => r.RegistrarLote(It.IsAny<List<Asistencia>>()), Times.Never);
+    }
+
+    [Fact]
     public async Task Registrar_AsistenciaNueva_RegistraCorrectamente()
     {
         // Arrange
@@ -115,7 +164,7 @@ public class AsistenciaServiceTests
 
         _cursoRepoMock.Setup(r => r.ObtenerPorId(1, 1)).ReturnsAsync(curso);
         _docenteRepoMock.Setup(r => r.ObtenerTodos(1)).ReturnsAsync(new List<Docente> { docente });
-        _asistenciaRepoMock.Setup(r => r.ExisteAsistenciaDelDia(1, DateTime.Today)).ReturnsAsync(false);
+        _asistenciaRepoMock.Setup(r => r.ObtenerPorCursoYFecha(1, DateTime.Today)).ReturnsAsync(new List<Asistencia>());
         _asistenciaRepoMock.Setup(r => r.RegistrarLote(It.IsAny<List<Asistencia>>())).Returns(Task.CompletedTask);
 
         var dto = new AsistenciaRegistrarDto
@@ -151,7 +200,6 @@ public class AsistenciaServiceTests
 
         _cursoRepoMock.Setup(r => r.ObtenerPorId(1, 1)).ReturnsAsync(curso);
         _docenteRepoMock.Setup(r => r.ObtenerTodos(1)).ReturnsAsync(new List<Docente> { docente });
-        _asistenciaRepoMock.Setup(r => r.ExisteAsistenciaDelDia(1, DateTime.Today)).ReturnsAsync(true);
         _asistenciaRepoMock.Setup(r => r.ObtenerPorCursoYFecha(1, DateTime.Today)).ReturnsAsync(asistenciasExistentes);
         _asistenciaRepoMock.Setup(r => r.ActualizarLote(It.IsAny<List<Asistencia>>())).Returns(Task.CompletedTask);
 
@@ -161,7 +209,8 @@ public class AsistenciaServiceTests
             Fecha   = DateTime.Today,
             Alumnos = new List<AsistenciaAlumnoDto>
             {
-                new() { IdAlumno = 1, Presente = true } // cambiamos a presente
+                new() { IdAlumno = 1, Presente = true },
+                new() { IdAlumno = 2, Presente = false }
             }
         };
 
@@ -172,6 +221,8 @@ public class AsistenciaServiceTests
         exito.Should().BeTrue();
         mensaje.Should().Be("Asistencia actualizada correctamente.");
         _asistenciaRepoMock.Verify(r => r.ActualizarLote(It.IsAny<List<Asistencia>>()), Times.Once);
+        _asistenciaRepoMock.Verify(r => r.RegistrarLote(It.Is<List<Asistencia>>(items =>
+            items.Count == 1 && items[0].IdAlumno == 2)), Times.Once);
     }
 
     [Fact]

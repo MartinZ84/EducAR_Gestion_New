@@ -9,7 +9,6 @@ public interface IMensajeRepository
     Task<Mensaje?> ObtenerPorId(int idMensaje, int idUsuario);
     Task<Mensaje> Crear(Mensaje mensaje);
     Task<bool> MarcarLeido(int idMensaje, int idUsuario);
-    Task<bool> Eliminar(int idMensaje, int idUsuario);
     Task<int> ContarNoLeidos(int idUsuario);
 
     Task<IQueryable<Mensaje>> ObtenerQueryableRecibidos(int idUsuario);

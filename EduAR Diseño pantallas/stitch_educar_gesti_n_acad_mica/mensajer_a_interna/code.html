@@ -1,0 +1,267 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>EducAR Gestión - Mensajería</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#89fa9b",
+                    "primary": "#005bbf",
+                    "outline": "#727785",
+                    "primary-container": "#1a73e8",
+                    "tertiary": "#006d2c",
+                    "on-surface": "#181c20",
+                    "on-tertiary-fixed": "#002108",
+                    "surface-container": "#eceef3",
+                    "surface-variant": "#e0e2e7",
+                    "on-secondary-container": "#00285c",
+                    "background": "#f7f9fe",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f7f9fe",
+                    "surface-dim": "#d8dadf",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#f1f4f9",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "tertiary-fixed-dim": "#6ddd81",
+                    "on-background": "#181c20",
+                    "inverse-primary": "#adc7ff",
+                    "tertiary-container": "#008939",
+                    "inverse-on-surface": "#eff1f6",
+                    "primary-fixed-dim": "#adc7ff",
+                    "surface-tint": "#005bc0",
+                    "surface-bright": "#f7f9fe",
+                    "surface-container-highest": "#e0e2e7",
+                    "on-tertiary-container": "#ffffff",
+                    "on-primary-container": "#ffffff",
+                    "outline-variant": "#c1c6d6",
+                    "surface-container-high": "#e6e8ed",
+                    "on-surface-variant": "#414754",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2d3135",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-primary-fixed": "#001a41",
+                    "secondary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#4d8efe",
+                    "on-secondary-fixed-variant": "#004494",
+                    "primary-fixed": "#d8e2ff",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "secondary": "#005ac1",
+                    "on-secondary-fixed": "#001a41"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "margin-mobile": "16px",
+                    "gutter-mobile": "12px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "display-lg": ["Roboto Flex"],
+                    "title-lg": ["Roboto Flex"],
+                    "label-lg": ["Roboto Flex"],
+                    "label-sm": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-md": ["Roboto Flex"],
+                    "title-md": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f7f9fe;
+            font-family: 'Roboto Flex', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .message-unread {
+            background-color: #ffffff;
+            border-left: 4px solid #005bbf;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c6d6;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface shadow-sm flex justify-between items-center px-margin-mobile py-sm h-16">
+<div class="flex items-center gap-md">
+<img alt="Profile" class="w-10 h-10 rounded-full border-2 border-primary-container object-cover" data-alt="A professional close-up portrait of a primary school teacher, a woman in her 30s with a warm smile, wearing a professional blue blazer. The setting is a bright, modern school office with a soft-focus background of books and educational materials. The lighting is natural and high-key, emphasizing a clean, institutional, and trust-inspiring academic atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzhH0f8vyLjIzbl_p05rAWnCz3XDXZOHdjMiptvj3Vjxd1R81ycbGj1bHNDWrOiO4NPejCT3m6T8UG7QuBmlHtUvUrrWx6QUl1wpxv1ow1trjj4FjD6CiIdFBZtyvMF12oCuv_2D7FPWAf6gdj1Uoi24hbkc-BcWwi3OtdM1lHxgIllvW71xCn_1FmK6Ic7u1hEtYZchLNLKELmDQCA3AQLRoMJqRzK907oSDrthL-0L6S560UadyHuf__qxgK_j7p-Z17uodb8TPq">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">EducAR Gestión</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content (Inbox) -->
+<main class="pb-32 px-margin-mobile pt-md">
+<!-- Search & Filter Area -->
+<div class="flex flex-col gap-sm mb-lg">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-md pl-12 pr-md font-body-md focus:ring-2 focus:ring-primary-container text-on-surface placeholder-on-surface-variant transition-all outline-none" placeholder="Buscar mensajes..." type="text">
+</div>
+<!-- Category Chips -->
+<div class="flex gap-sm overflow-x-auto pb-xs custom-scrollbar">
+<button class="px-md py-xs bg-secondary-container text-on-secondary-container rounded-full font-label-lg whitespace-nowrap active:scale-95 transition-all">Recibidos</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-lg whitespace-nowrap active:scale-95 transition-all">No leídos</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-lg whitespace-nowrap active:scale-95 transition-all">Institucionales</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-lg whitespace-nowrap active:scale-95 transition-all">Directivos</button>
+</div>
+</div>
+<!-- Message List -->
+<div class="flex flex-col gap-sm">
+<!-- Message Card 1 (Unread) -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant flex gap-md items-start relative active:scale-[0.98] transition-transform hover:shadow-md border-l-4 border-l-primary">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-title-md text-on-surface truncate pr-md">Prof. Ana Martínez</h3>
+<span class="font-label-sm text-primary whitespace-nowrap">10:45 AM</span>
+</div>
+<p class="font-label-lg text-on-surface font-bold mb-xs truncate">Planificación 4to Grado "B"</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Hola, te adjunto los archivos para la revisión de la semana próxima. Por favor confirmar si...</p>
+</div>
+<div class="absolute right-md bottom-md">
+<span class="block w-2.5 h-2.5 bg-primary rounded-full"></span>
+</div>
+</div>
+<!-- Message Card 2 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant flex gap-md items-start active:scale-[0.98] transition-transform hover:shadow-md">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-title-md text-on-surface truncate pr-md">Dirección General</h3>
+<span class="font-label-sm text-on-surface-variant whitespace-nowrap">Hoy</span>
+</div>
+<p class="font-label-lg text-on-surface mb-xs truncate">Reunión de Personal Docente</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Se convoca a todos los docentes a la reunión informativa que tendrá lugar el viernes a las...</p>
+</div>
+</div>
+<!-- Message Card 3 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant flex gap-md items-start active:scale-[0.98] transition-transform hover:shadow-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-title-md text-on-surface truncate pr-md">Secretaría Académica</h3>
+<span class="font-label-sm text-on-surface-variant whitespace-nowrap">Ayer</span>
+</div>
+<p class="font-label-lg text-on-surface mb-xs truncate">Cierre de Calificaciones Trimestrales</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Recordamos que la fecha límite para la carga de notas del primer trimestre es el 15 de...</p>
+</div>
+</div>
+<!-- Message Card 4 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant flex gap-md items-start active:scale-[0.98] transition-transform hover:shadow-md">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed-dim flex items-center justify-center text-on-tertiary-fixed shrink-0">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-title-md text-on-surface truncate pr-md">Consejo Escolar</h3>
+<span class="font-label-sm text-on-surface-variant whitespace-nowrap">Lun</span>
+</div>
+<p class="font-label-lg text-on-surface mb-xs truncate">Nuevos protocolos de seguridad</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Se han actualizado los protocolos de ingreso y egreso de alumnos para el turno tarde...</p>
+</div>
+</div>
+<!-- Empty State Helper (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-xl opacity-50">
+<span class="material-symbols-outlined text-[64px] mb-md text-outline-variant">inbox</span>
+<p class="font-title-md">No hay mensajes nuevos</p>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-md w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl shadow-xl flex items-center justify-center active:scale-90 transition-all z-50 group hover:shadow-2xl">
+<span class="material-symbols-outlined text-[28px] font-bold">add</span>
+<span class="absolute right-16 bg-primary text-on-primary px-md py-sm rounded-lg font-label-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Nuevo mensaje</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant flex justify-around items-center h-[80px] pb-safe shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full px-lg py-xs active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-lg py-xs active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mail</span>
+<span class="font-label-sm text-label-sm">Mensajes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full px-lg py-xs active:scale-95" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search bar interaction
+        const searchInput = document.querySelector('input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary-container');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary-container');
+        });
+    </script>
+</body></html>

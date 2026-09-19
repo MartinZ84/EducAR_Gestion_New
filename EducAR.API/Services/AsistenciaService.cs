@@ -10,15 +10,21 @@ public class AsistenciaService : IAsistenciaService
     private readonly IAsistenciaRepository _asistenciaRepository;
     private readonly ICursoRepository _cursoRepository;
     private readonly IDocenteRepository _docenteRepository;
+    private readonly IDocenteMateriaCursoRepository _asignacionRepository;
+    private readonly IMatriculaRepository _matriculaRepository;
 
     public AsistenciaService(
         IAsistenciaRepository asistenciaRepository,
         ICursoRepository cursoRepository,
-        IDocenteRepository docenteRepository)
+        IDocenteRepository docenteRepository,
+        IDocenteMateriaCursoRepository asignacionRepository,
+        IMatriculaRepository matriculaRepository)
     {
         _asistenciaRepository = asistenciaRepository;
         _cursoRepository = cursoRepository;
         _docenteRepository = docenteRepository;
+        _asignacionRepository = asignacionRepository;
+        _matriculaRepository = matriculaRepository;
     }
 
     public async Task<AsistenciaPorFechaResponseDto?> ObtenerPorCursoYFecha(int idCurso, DateTime fecha, int idEscuela)
@@ -88,17 +94,27 @@ public class AsistenciaService : IAsistenciaService
 
         var idDocenteReal = docente.IdDocente;
 
+        var asignaciones = await _asignacionRepository.ObtenerPorDocente(idDocenteReal);
+        if (!asignaciones.Any(a => a.IdCurso == dto.IdCurso))
+            return (false, "El docente no está asignado a este curso.");
+
         if (!dto.Alumnos.Any())
             return (false, "Debe incluir al menos un alumno.");
 
+        var matriculas = await _matriculaRepository.ObtenerPorCurso(dto.IdCurso, idEscuela);
+        var idsMatriculados = matriculas.Select(m => m.IdAlumno).ToHashSet();
+        var idsRecibidos = dto.Alumnos.Select(a => a.IdAlumno).ToList();
+        if (idsRecibidos.Count != idsRecibidos.Distinct().Count() ||
+            idsMatriculados.Count == 0 ||
+            !idsMatriculados.SetEquals(idsRecibidos))
+            return (false, "La asistencia debe incluir una sola vez a todos los alumnos matriculados en el curso.");
+
         var fechaSinHora = dto.Fecha.Date;
 
-        // Si ya existe asistencia del día → actualizar, sino → crear
-        var yaExiste = await _asistenciaRepository.ExisteAsistenciaDelDia(dto.IdCurso, fechaSinHora);
-
-        if (yaExiste)
+        var existentes = await _asistenciaRepository.ObtenerPorCursoYFecha(dto.IdCurso, fechaSinHora);
+        if (existentes.Count > 0)
         {
-            var existentes = await _asistenciaRepository.ObtenerPorCursoYFecha(dto.IdCurso, fechaSinHora);
+            var faltantes = new List<Asistencia>();
             foreach (var item in dto.Alumnos)
             {
                 var reg = existentes.FirstOrDefault(a => a.IdAlumno == item.IdAlumno);
@@ -107,8 +123,20 @@ public class AsistenciaService : IAsistenciaService
                     reg.Presente  = item.Presente;
                     reg.FechaAct  = DateTime.Now;
                 }
+                else
+                    faltantes.Add(new Asistencia
+                    {
+                        IdDocente = idDocenteReal,
+                        IdAlumno = item.IdAlumno,
+                        IdCurso = dto.IdCurso,
+                        Fecha = fechaSinHora,
+                        Presente = item.Presente,
+                        Activo = true
+                    });
             }
             await _asistenciaRepository.ActualizarLote(existentes);
+            if (faltantes.Count > 0)
+                await _asistenciaRepository.RegistrarLote(faltantes);
             return (true, "Asistencia actualizada correctamente.");
         }
 

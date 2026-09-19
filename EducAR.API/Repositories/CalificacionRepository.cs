@@ -21,7 +21,7 @@ public class CalificacionRepository : ICalificacionRepository
             .Include(c => c.Alumno)
             .Include(c => c.Materia)
             .Include(c => c.PeriodoEvaluacion)
-            .Where(c => c.IdMateria == idMateria &&
+            .Where(c => c.Activo && c.IdMateria == idMateria &&
                         c.IdPeriodoEvaluacion == idPeriodo &&
                         _context.Matriculas.Any(m => m.IdAlumno == c.IdAlumno &&
                                                        m.IdCurso == idCurso &&
@@ -35,7 +35,7 @@ public class CalificacionRepository : ICalificacionRepository
         return await _context.Calificaciones
             .Include(c => c.Materia)
             .Include(c => c.PeriodoEvaluacion)
-            .Where(c => c.IdAlumno == idAlumno && c.IdPeriodoEvaluacion == idPeriodo)
+            .Where(c => c.Activo && c.IdAlumno == idAlumno && c.IdPeriodoEvaluacion == idPeriodo)
             .OrderBy(c => c.Materia.Nombre)
             .ToListAsync();
     }
@@ -43,7 +43,7 @@ public class CalificacionRepository : ICalificacionRepository
     public async Task<Calificacion?> ObtenerPorAlumnoMateriaYPeriodo(int idAlumno, int idMateria, int idPeriodo)
     {
         return await _context.Calificaciones
-            .FirstOrDefaultAsync(c => c.IdAlumno == idAlumno &&
+            .FirstOrDefaultAsync(c => c.Activo && c.IdAlumno == idAlumno &&
                                       c.IdMateria == idMateria &&
                                       c.IdPeriodoEvaluacion == idPeriodo);
     }

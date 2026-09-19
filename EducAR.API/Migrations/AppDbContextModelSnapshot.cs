@@ -487,6 +487,45 @@ namespace EducAR.API.Migrations
                     b.ToTable("Escuelas");
                 });
 
+            modelBuilder.Entity("EducAR.API.Models.Evaluacion", b =>
+                {
+                    b.Property<int>("IdEvaluacion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdEvaluacion"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdCurso")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMateria")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdPeriodoEvaluacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("IdEvaluacion");
+
+                    b.HasIndex("IdCurso");
+
+                    b.HasIndex("IdMateria");
+
+                    b.HasIndex("IdPeriodoEvaluacion");
+
+                    b.ToTable("Evaluaciones");
+                });
+
             modelBuilder.Entity("EducAR.API.Models.Materia", b =>
                 {
                     b.Property<int>("IdMateria")
@@ -616,6 +655,37 @@ namespace EducAR.API.Migrations
                     b.HasIndex("IdUsuarioRemitente");
 
                     b.ToTable("Mensajes");
+                });
+
+            modelBuilder.Entity("EducAR.API.Models.NotaEvaluacion", b =>
+                {
+                    b.Property<int>("IdNotaEvaluacion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdNotaEvaluacion"));
+
+                    b.Property<DateTime>("FechaAct")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdAlumno")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdEvaluacion")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
+
+                    b.HasKey("IdNotaEvaluacion");
+
+                    b.HasIndex("IdAlumno");
+
+                    b.HasIndex("IdEvaluacion", "IdAlumno")
+                        .IsUnique();
+
+                    b.ToTable("NotasEvaluacion");
                 });
 
             modelBuilder.Entity("EducAR.API.Models.PeriodoEvaluacion", b =>
@@ -998,6 +1068,33 @@ namespace EducAR.API.Migrations
                     b.Navigation("Materia");
                 });
 
+            modelBuilder.Entity("EducAR.API.Models.Evaluacion", b =>
+                {
+                    b.HasOne("EducAR.API.Models.Curso", "Curso")
+                        .WithMany()
+                        .HasForeignKey("IdCurso")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("EducAR.API.Models.Materia", "Materia")
+                        .WithMany()
+                        .HasForeignKey("IdMateria")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("EducAR.API.Models.PeriodoEvaluacion", "PeriodoEvaluacion")
+                        .WithMany()
+                        .HasForeignKey("IdPeriodoEvaluacion")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Materia");
+
+                    b.Navigation("PeriodoEvaluacion");
+                });
+
             modelBuilder.Entity("EducAR.API.Models.Materia", b =>
                 {
                     b.HasOne("EducAR.API.Models.Escuela", "Escuela")
@@ -1061,6 +1158,25 @@ namespace EducAR.API.Migrations
                     b.Navigation("Destinatario");
 
                     b.Navigation("Remitente");
+                });
+
+            modelBuilder.Entity("EducAR.API.Models.NotaEvaluacion", b =>
+                {
+                    b.HasOne("EducAR.API.Models.Alumno", "Alumno")
+                        .WithMany()
+                        .HasForeignKey("IdAlumno")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("EducAR.API.Models.Evaluacion", "Evaluacion")
+                        .WithMany("Notas")
+                        .HasForeignKey("IdEvaluacion")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Alumno");
+
+                    b.Navigation("Evaluacion");
                 });
 
             modelBuilder.Entity("EducAR.API.Models.PeriodoEvaluacion", b =>
@@ -1177,6 +1293,11 @@ namespace EducAR.API.Migrations
                     b.Navigation("Matriculas");
 
                     b.Navigation("Usuarios");
+                });
+
+            modelBuilder.Entity("EducAR.API.Models.Evaluacion", b =>
+                {
+                    b.Navigation("Notas");
                 });
 
             modelBuilder.Entity("EducAR.API.Models.Materia", b =>

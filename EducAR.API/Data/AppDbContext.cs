@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
     public DbSet<PeriodoEvaluacion> PeriodosEvaluacion => Set<PeriodoEvaluacion>();
     public DbSet<Asistencia> Asistencias => Set<Asistencia>();
     public DbSet<Calificacion> Calificaciones => Set<Calificacion>();
+    public DbSet<Evaluacion> Evaluaciones => Set<Evaluacion>();
+    public DbSet<NotaEvaluacion> NotasEvaluacion => Set<NotaEvaluacion>();
     public DbSet<Boletin> Boletines => Set<Boletin>();
     public DbSet<DetalleBoletin> DetallesBoletines => Set<DetalleBoletin>();
     public DbSet<Mensaje> Mensajes => Set<Mensaje>();
@@ -30,6 +32,26 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Evaluacion>()
+            .HasOne(e => e.Curso).WithMany().HasForeignKey(e => e.IdCurso)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Evaluacion>()
+            .HasOne(e => e.Materia).WithMany().HasForeignKey(e => e.IdMateria)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Evaluacion>()
+            .HasOne(e => e.PeriodoEvaluacion).WithMany().HasForeignKey(e => e.IdPeriodoEvaluacion)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<NotaEvaluacion>()
+            .HasOne(n => n.Evaluacion).WithMany(e => e.Notas).HasForeignKey(n => n.IdEvaluacion)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<NotaEvaluacion>()
+            .HasOne(n => n.Alumno).WithMany().HasForeignKey(n => n.IdAlumno)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<NotaEvaluacion>()
+            .HasIndex(n => new { n.IdEvaluacion, n.IdAlumno }).IsUnique();
+        modelBuilder.Entity<NotaEvaluacion>()
+            .Property(n => n.Valor).HasPrecision(4, 2);
 
         // ==========================
         // USUARIO

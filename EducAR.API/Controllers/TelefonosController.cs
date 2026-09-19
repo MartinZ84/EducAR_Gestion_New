@@ -23,7 +23,7 @@ public class TelefonosController : ControllerBase
 
     // GET api/telefonos/alumno/5
     [HttpGet("alumno/{idAlumno}")]
-    [Authorize(Roles = "Administrador,Docente,Tutor")]
+    [Authorize(Roles = "Administrador,Docente")]
     public async Task<IActionResult> ObtenerPorAlumno(int idAlumno)
     {
         var telefonos = await _telefonoService.ObtenerPorAlumnoAsync(idAlumno, IdEscuelaActual);

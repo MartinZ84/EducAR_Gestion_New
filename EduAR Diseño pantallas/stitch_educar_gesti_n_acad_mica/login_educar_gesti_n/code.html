@@ -1,0 +1,229 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>EducAR Gestión - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#89fa9b",
+                        "primary": "#005bbf",
+                        "outline": "#727785",
+                        "primary-container": "#1a73e8",
+                        "tertiary": "#006d2c",
+                        "on-surface": "#181c20",
+                        "on-tertiary-fixed": "#002108",
+                        "surface-container": "#eceef3",
+                        "surface-variant": "#e0e2e7",
+                        "on-secondary-container": "#00285c",
+                        "background": "#f7f9fe",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f7f9fe",
+                        "surface-dim": "#d8dadf",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f4f9",
+                        "on-tertiary-fixed-variant": "#005320",
+                        "tertiary-fixed-dim": "#6ddd81",
+                        "on-background": "#181c20",
+                        "inverse-primary": "#adc7ff",
+                        "tertiary-container": "#008939",
+                        "inverse-on-surface": "#eff1f6",
+                        "primary-fixed-dim": "#adc7ff",
+                        "surface-tint": "#005bc0",
+                        "surface-bright": "#f7f9fe",
+                        "surface-container-highest": "#e0e2e7",
+                        "on-tertiary-container": "#ffffff",
+                        "on-primary-container": "#ffffff",
+                        "outline-variant": "#c1c6d6",
+                        "surface-container-high": "#e6e8ed",
+                        "on-surface-variant": "#414754",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2d3135",
+                        "on-primary-fixed-variant": "#004493",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#4d8efe",
+                        "on-secondary-fixed-variant": "#004494",
+                        "primary-fixed": "#d8e2ff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "secondary": "#005ac1",
+                        "on-secondary-fixed": "#001a41"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "margin-mobile": "16px",
+                        "gutter-mobile": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Roboto Flex"],
+                        "headline-lg": ["Roboto Flex"],
+                        "display-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "label-sm": ["Roboto Flex"],
+                        "headline-lg-mobile": ["Roboto Flex"],
+                        "body-md": ["Roboto Flex"],
+                        "title-md": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                        "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                        "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Roboto Flex', sans-serif;
+            background-color: #f7f9fe;
+        }
+        .login-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #c1c6d6;
+        }
+        /* State layers for buttons */
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-md">
+<!-- Top Area: Logo and Title -->
+<header class="flex flex-col items-center mb-xl animate-fade-in">
+<img alt="Logo EducAR Gestión" class="w-16 h-16 mb-sm drop-shadow-sm" src="data:image/png;base64,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">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+            EducAR Gestión
+        </h1>
+</header>
+<!-- Center: Login Card -->
+<main class="w-full max-w-[400px]">
+<div class="login-card bg-surface-container-lowest rounded-xl p-lg space-y-lg">
+<!-- Welcome Message -->
+<div class="space-y-xs">
+<h2 class="font-title-lg text-title-lg text-on-surface">Bienvenido</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Inicie sesión para acceder al portal académico.</p>
+</div>
+<!-- Login Form -->
+<form class="space-y-md" id="loginForm">
+<!-- User field (DNI) -->
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant ml-xs" for="dni">DNI</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">
+                            person
+                        </span>
+<input class="w-full h-[56px] pl-[48px] pr-md bg-transparent border border-outline rounded-lg font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" id="dni" name="dni" placeholder="Ingrese su documento" required="" type="text">
+</div>
+</div>
+<!-- Password field -->
+<div class="space-y-xs">
+<div class="flex justify-between items-center px-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant" for="password">Contraseña</label>
+<a class="font-label-lg text-label-lg text-primary hover:underline" href="#">¿Olvidó su clave?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">
+                            lock
+                        </span>
+<input class="w-full h-[56px] pl-[48px] pr-[48px] bg-transparent border border-outline rounded-lg font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" id="password" name="password" placeholder="••••••••" required="" type="password">
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:bg-surface-container-high rounded-full p-xs transition-colors" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Primary Button -->
+<div class="pt-sm">
+<button class="btn-primary w-full h-[48px] bg-primary text-on-primary font-label-lg text-label-lg rounded-full shadow-sm hover:bg-primary-container hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-sm" type="submit">
+<span>Ingresar</span>
+<span class="material-symbols-outlined text-[20px]">login</span>
+</button>
+</div>
+</form>
+<!-- Footer links -->
+<div class="flex flex-col items-center pt-md border-t border-outline-variant space-y-sm">
+<p class="font-body-md text-body-md text-on-surface-variant">¿No tiene una cuenta?</p>
+<button class="font-label-lg text-label-lg text-primary border border-outline-variant px-lg py-xs rounded-full hover:bg-surface-container-high transition-colors">
+                    Solicitar acceso
+                </button>
+</div>
+</div>
+</main>
+<!-- Page Footer -->
+<footer class="mt-xl text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">
+            © 2024 EducAR Gestión. Sistema de Administración Académica.
+        </p>
+</footer>
+<!-- Interactive Scripts -->
+<script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = 'visibility';
+            }
+        }
+
+        // Simple form handling for visual feedback
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Validando...';
+            
+            setTimeout(() => {
+                btn.classList.replace('bg-primary', 'bg-tertiary');
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Éxito';
+                setTimeout(() => {
+                    alert('Acceso concedido. Redirigiendo al Dashboard de EducAR Gestión...');
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    btn.classList.replace('bg-tertiary', 'bg-primary');
+                }, 1000);
+            }, 1500);
+        });
+    </script>
+</body></html>
