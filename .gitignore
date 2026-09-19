@@ -1,0 +1,25 @@
+# Compilación de .NET
+**/bin/
+**/obj/
+
+# Resultados y cobertura de pruebas
+**/TestResults/
+**/coverage/
+*.coverage
+*.coveragexml
+
+# Archivos locales del IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Registros y temporales
+*.log
+*.tmp
+*.bak
+.codex-*/
+
+# Configuración local con secretos
+appsettings.*.local.json
