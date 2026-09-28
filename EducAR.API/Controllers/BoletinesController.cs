@@ -66,6 +66,17 @@ public class BoletinesController : ControllerBase
         return Ok(new { mensaje, boletinesGenerados = generados });
     }
 
+    [HttpPost("alumno/{idAlumno}/curso/{idCurso}/periodo/{idPeriodo}/generar")]
+    [Authorize(Roles = "Administrador,Docente")]
+    public async Task<IActionResult> GenerarParaAlumno(int idAlumno, int idCurso, int idPeriodo)
+    {
+        if (!await PuedeVerCurso(idCurso)) return Forbid();
+        var (exito, mensaje, boletin) = await _boletinService.GenerarParaAlumno(
+            idAlumno, idCurso, idPeriodo, IdEscuelaActual);
+        if (!exito) return BadRequest(new { mensaje });
+        return Ok(boletin);
+    }
+
     // PATCH api/boletines/5/observacion
     [HttpPatch("{id}/observacion")]
     [Authorize(Roles = "Administrador,Docente")]

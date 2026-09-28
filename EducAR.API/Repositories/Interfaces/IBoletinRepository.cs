@@ -8,5 +8,5 @@ public interface IBoletinRepository
     Task<Boletin?> ObtenerPorAlumnoCursoYPeriodo(int idAlumno, int idCurso, int idPeriodo);
     Task<Boletin?> ObtenerPorId(int idBoletin);
     Task<Boletin> Crear(Boletin boletin);
-    Task<bool> Actualizar(Boletin boletin);
+    Task<bool> Actualizar(Boletin boletin, bool reemplazarDetalles = false);
 }

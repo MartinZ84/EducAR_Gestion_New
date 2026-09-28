@@ -4,15 +4,22 @@ public class BoletinResponseDto
 {
     public int IdBoletin { get; set; }
     public int IdAlumno { get; set; }
+    public int DniAlumno { get; set; }
     public string NombreAlumno { get; set; } = null!;
     public string ApellidoAlumno { get; set; } = null!;
     public int IdCurso { get; set; }
     public string Curso { get; set; } = null!;
+    public int IdCicloLectivo { get; set; }
+    public int AnioLectivo { get; set; }
     public int IdPeriodoEvaluacion { get; set; }
     public string NombrePeriodo { get; set; } = null!;
+    public DateTime FechaInicioPeriodo { get; set; }
+    public DateTime FechaFinPeriodo { get; set; }
     public string? ObservacionGeneral { get; set; }
-    public decimal PromedioGeneral { get; set; }
-    public DateTime FechaGeneracion { get; set; }
+    public decimal? PromedioGeneral { get; set; }
+    public DateTime? FechaGeneracion { get; set; }
+    public bool EstaGuardado { get; set; }
+    public bool RequiereRegeneracion { get; set; }
     public List<DetalleBoletinResponseDto> Detalle { get; set; } = new();
 }
 
@@ -20,6 +27,6 @@ public class DetalleBoletinResponseDto
 {
     public int IdMateria { get; set; }
     public string NombreMateria { get; set; } = null!;
-    public decimal CalificacionFinal { get; set; }
+    public decimal? CalificacionFinal { get; set; }
     public string? ConceptoFinal { get; set; }
 }

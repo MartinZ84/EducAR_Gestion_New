@@ -52,6 +52,10 @@ public class AppDbContext : DbContext
             .HasIndex(n => new { n.IdEvaluacion, n.IdAlumno }).IsUnique();
         modelBuilder.Entity<NotaEvaluacion>()
             .Property(n => n.Valor).HasPrecision(4, 2);
+        modelBuilder.Entity<NotaEvaluacion>()
+            .ToTable(t => t.HasCheckConstraint("CK_NotasEvaluacion_Valor", "[Valor] >= 1 AND [Valor] <= 10"));
+        modelBuilder.Entity<Evaluacion>()
+            .HasIndex(e => new { e.IdCurso, e.IdMateria, e.IdPeriodoEvaluacion, e.Activo });
 
         // ==========================
         // USUARIO

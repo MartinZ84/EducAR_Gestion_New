@@ -14,11 +14,16 @@ public class MensajeService : IMensajeService
 {
     private readonly IMensajeRepository _mensajeRepository;
     private readonly AppDbContext _context;
+    private readonly IEmailNotificacionesService _emailNotificacionesService;
 
-    public MensajeService(IMensajeRepository mensajeRepository, AppDbContext context)
+    public MensajeService(
+        IMensajeRepository mensajeRepository,
+        AppDbContext context,
+        IEmailNotificacionesService emailNotificacionesService)
     {
         _mensajeRepository = mensajeRepository;
         _context = context;
+        _emailNotificacionesService = emailNotificacionesService;
     }
 
     public async Task<List<MensajeResumenDto>> ObtenerRecibidos(int idUsuario)
@@ -60,13 +65,11 @@ public class MensajeService : IMensajeService
         if (cantidadActivos != idsDestinatarios.Count)
             return (false, "Uno o más destinatarios no existen o no pertenecen a esta escuela.");
 
-        // ObtenerDestinatarios aplica la relación docente-curso-alumno-tutor y exige
-        // que el ciclo lectivo sea el actual. Ningún ID enviado por el navegador puede
-        // saltear esa validación, incluso usando la opción "Seleccionar todos".
+        // La lista del servidor aplica el alcance correspondiente al rol remitente.
         var permitidos = (await ObtenerDestinatarios(idUsuarioRemitente, idEscuela))
             .Select(u => u.IdUsuario).ToHashSet();
         if (idsDestinatarios.Any(id => !permitidos.Contains(id)))
-            return (false, "Solo puede enviar mensajes a docentes o tutores vinculados en el ciclo lectivo actual.");
+            return (false, "Uno o más destinatarios no están habilitados para este remitente.");
 
         // Se crea un registro independiente por destinatario. Así cada tutor puede
         // leer el mensaje por separado y conservar su propio estado Leido.
@@ -77,6 +80,25 @@ public class MensajeService : IMensajeService
                 Asunto = dto.Asunto, MensajeTexto = dto.MensajeTexto,
                 FechaEnvio = DateTime.Now, Leido = false, Activo = true
             });
+
+        var remitente = await _context.Usuarios.AsNoTracking()
+            .Where(u => u.IdUsuario == idUsuarioRemitente)
+            .Select(u => new { u.Email, Nombre = u.Nombre + " " + u.Apellido })
+            .FirstOrDefaultAsync();
+        var destinatariosEmail = await _context.Usuarios.AsNoTracking()
+            .Where(u => idsDestinatarios.Contains(u.IdUsuario))
+            .Select(u => new { u.Email, Nombre = u.Nombre + " " + u.Apellido })
+            .ToListAsync();
+        var emailEnviado = remitente is not null && destinatariosEmail.Count == idsDestinatarios.Count &&
+            await _emailNotificacionesService.EnviarAsync(
+                remitente.Email,
+                remitente.Nombre,
+                destinatariosEmail.Select(u => (u.Email, u.Nombre)).ToList(),
+                dto.Asunto,
+                dto.MensajeTexto);
+
+        if (!emailEnviado)
+            return (true, "Mensaje guardado en la plataforma, pero no se pudo enviar el email a todos los destinatarios.");
 
         return (true, idsDestinatarios.Count == 1
             ? "Mensaje enviado correctamente."
@@ -89,6 +111,25 @@ public class MensajeService : IMensajeService
         // obtienen tutores de alumnos de sus cursos; para un tutor, los docentes
         // de los cursos de sus alumnos vinculados.
         var anioActual = DateTime.Now.Year;
+        var esAdministrador = await _context.Usuarios.AnyAsync(u =>
+            u.IdUsuario == idUsuario && u.IdEscuela == idEscuela && u.Activo &&
+            u.Rol.Nombre == "Administrador");
+        if (esAdministrador)
+        {
+            return await _context.Usuarios
+                .Where(u => u.IdEscuela == idEscuela && u.Activo && u.IdUsuario != idUsuario &&
+                    (u.Rol.Nombre == "Administrador" || u.Rol.Nombre == "Docente" || u.Rol.Nombre == "Tutor"))
+                .OrderBy(u => u.Rol.Nombre).ThenBy(u => u.Apellido).ThenBy(u => u.Nombre)
+                .Select(u => new DestinatarioMensajeDto
+                {
+                    IdUsuario = u.IdUsuario,
+                    IdAlumno = 0,
+                    NombreCompleto = u.Nombre + " " + u.Apellido,
+                    NombreAlumno = "",
+                    Rol = u.Rol.Nombre
+                }).ToListAsync();
+        }
+
         var esDocente = await _context.Docentes.AnyAsync(d =>
             d.IdUsuario == idUsuario && d.Usuario.IdEscuela == idEscuela && d.Usuario.Activo);
         var esTutor = await _context.Tutores.AnyAsync(t =>

@@ -49,8 +49,18 @@ public class AlumnoService : IAlumnoService
             AsistenciaResumen = new AsistenciaResumenDto { Presentes = asistencias.Count(a => a.Presente), Ausentes = asistencias.Count(a => !a.Presente), Justificadas = 0 },
             Asistencias = asistencias.OrderByDescending(a => a.Fecha).Select(a => new AsistenciaDetalleDto { IdAsistencia = a.IdAsistencia, Fecha = a.Fecha, Presente = a.Presente, Estado = a.Presente ? "Presente" : "Ausente" }).ToList(),
             Calificaciones = alumno.Calificaciones.Where(c => c.Activo).Select(c => new CalificacionDetalleDto { Materia = c.Materia.Nombre, Nota = c.ValorCalificacion, Periodo = c.PeriodoEvaluacion.Nombre }).ToList(),
-            Boletines = boletines.Select(b => new BoletinDetalleDto
-            { Periodo = b.PeriodoEvaluacion.Nombre, Promedio = b.Detalles.Any() ? b.Detalles.Where(d => d.Activo).Average(d => d.CalificacionFinal) : 0, Estado = b.Detalles.Any() && b.Detalles.Where(d => d.Activo).Average(d => d.CalificacionFinal) >= 6 ? "Aprobado" : "Pendiente" }).ToList()
+            Boletines = boletines.Select(b =>
+            {
+                var notas = b.Detalles.Where(d => d.Activo && d.CalificacionFinal.HasValue)
+                    .Select(d => d.CalificacionFinal!.Value).ToList();
+                var promedio = notas.Count == 0 ? (decimal?)null : notas.Average();
+                return new BoletinDetalleDto
+                {
+                    Periodo = b.PeriodoEvaluacion.Nombre,
+                    Promedio = promedio,
+                    Estado = promedio >= 6 ? "Aprobado" : "Pendiente"
+                };
+            }).ToList()
         };
     }
 

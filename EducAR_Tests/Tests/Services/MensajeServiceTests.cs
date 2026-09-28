@@ -3,6 +3,7 @@ using EducAR.API.DTOs.Mensajes;
 using EducAR.API.Models;
 using EducAR.API.Repositories.Interfaces;
 using EducAR.API.Services;
+using EducAR.API.Services.Interfaces;
 using EducAR.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,18 @@ namespace EducAR.Tests.Tests.Services;
 public class MensajeServiceTests
 {
     private readonly Mock<IMensajeRepository> _mensajeRepoMock;
+    private readonly Mock<IEmailNotificacionesService> _emailNotificacionesServiceMock;
     private readonly AppDbContext _context;
     private readonly MensajeService _service;
 
     public MensajeServiceTests()
     {
         _mensajeRepoMock = new Mock<IMensajeRepository>();
+        _emailNotificacionesServiceMock = new Mock<IEmailNotificacionesService>();
+        _emailNotificacionesServiceMock
+            .Setup(s => s.EnviarAsync(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<IReadOnlyCollection<(string Email, string Nombre)>>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync(true);
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: $"EducAR_Test_{Guid.NewGuid()}")
@@ -28,7 +35,7 @@ public class MensajeServiceTests
         _context = new AppDbContext(options);
         SeedDatabase();
 
-        _service = new MensajeService(_mensajeRepoMock.Object, _context);
+        _service = new MensajeService(_mensajeRepoMock.Object, _context, _emailNotificacionesServiceMock.Object);
     }
 
     // private void SeedDatabase()
@@ -134,6 +141,54 @@ public class MensajeServiceTests
 
         resultado.exito.Should().BeTrue();
         _mensajeRepoMock.Verify(r => r.Crear(It.IsAny<Mensaje>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task Admin_ObtieneDestinatariosDeSuEscuelaAgrupablesPorRol()
+    {
+        var rolAdmin = await _context.Roles.FindAsync(1);
+        var rolTutor = await _context.Roles.FindAsync(3);
+        var escuela = await _context.Escuelas.FindAsync(1);
+        var otraEscuela = TestDataBuilder.BuildEscuela(2);
+        var otroAdmin = TestDataBuilder.BuildUsuario(4, 1, 1, "admin2", "Otro admin");
+        var usuarioOtraEscuela = TestDataBuilder.BuildUsuario(5, 3, 2, "tutor-otra-escuela", "Tutor");
+        otroAdmin.Rol = rolAdmin!;
+        otroAdmin.Escuela = escuela!;
+        usuarioOtraEscuela.Rol = rolTutor!;
+        usuarioOtraEscuela.Escuela = otraEscuela;
+        _context.Escuelas.Add(otraEscuela);
+        _context.Usuarios.AddRange(otroAdmin, usuarioOtraEscuela);
+        await _context.SaveChangesAsync();
+
+        var destinatarios = await _service.ObtenerDestinatarios(1, 1);
+
+        destinatarios.Should().HaveCount(3);
+        destinatarios.Select(d => d.Rol).Should().BeEquivalentTo("Administrador", "Docente", "Tutor");
+        destinatarios.Should().NotContain(d => d.IdUsuario == 1);
+        destinatarios.Should().NotContain(d => d.IdUsuario == 5);
+    }
+
+    [Fact]
+    public async Task Admin_PuedeEnviarAUnoOMasRolesDeSuEscuela()
+    {
+        var rolAdmin = await _context.Roles.FindAsync(1);
+        var escuela = await _context.Escuelas.FindAsync(1);
+        var otroAdmin = TestDataBuilder.BuildUsuario(4, 1, 1, "admin2", "Otro admin");
+        otroAdmin.Rol = rolAdmin!;
+        otroAdmin.Escuela = escuela!;
+        _context.Usuarios.Add(otroAdmin);
+        await _context.SaveChangesAsync();
+        _mensajeRepoMock.Setup(r => r.Crear(It.IsAny<Mensaje>())).ReturnsAsync((Mensaje m) => m);
+
+        var resultado = await _service.Enviar(new MensajeCreateDto
+        {
+            IdsUsuariosDestinatarios = new() { 2, 3, 4 },
+            Asunto = "Aviso general",
+            MensajeTexto = "Información para docentes y tutores"
+        }, 1, 1);
+
+        resultado.exito.Should().BeTrue();
+        _mensajeRepoMock.Verify(r => r.Crear(It.IsAny<Mensaje>()), Times.Exactly(3));
     }
 
     [Fact]

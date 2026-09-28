@@ -10,6 +10,7 @@ public class Calificacion
     public int IdMateria { get; set; }
     public int IdPeriodoEvaluacion { get; set; }
     public decimal ValorCalificacion { get; set; }
+    public bool GeneradaPorEvaluaciones { get; set; }
     public int? NivelCalificacion { get; set; }
     public string? Observacion { get; set; }
     public DateTime Fecha { get; set; } = DateTime.Now;

@@ -11,6 +11,10 @@ public class Evaluacion
     public int IdPeriodoEvaluacion { get; set; }
     [MaxLength(200)]
     public string Titulo { get; set; } = null!;
+    [MaxLength(4000)]
+    public string Temario { get; set; } = "";
+    [MaxLength(4000)]
+    public string Descripcion { get; set; } = "";
     public DateTime Fecha { get; set; }
     public bool Activo { get; set; } = true;
 

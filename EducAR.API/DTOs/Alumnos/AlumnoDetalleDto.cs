@@ -29,5 +29,5 @@ public class AlumnoTutorDetalleDto { public int IdTutor { get; set; } public str
 public class AsistenciaResumenDto { public int Presentes { get; set; } public int Ausentes { get; set; } public int Justificadas { get; set; } }
 public class AsistenciaDetalleDto { public int IdAsistencia { get; set; } public DateTime Fecha { get; set; } public bool Presente { get; set; } public string Estado { get; set; } = null!; }
 public class CalificacionDetalleDto { public string Materia { get; set; } = null!; public decimal Nota { get; set; } public string Periodo { get; set; } = null!; }
-public class BoletinDetalleDto { public string Periodo { get; set; } = null!; public decimal Promedio { get; set; } public string Estado { get; set; } = null!; }
+public class BoletinDetalleDto { public string Periodo { get; set; } = null!; public decimal? Promedio { get; set; } public string Estado { get; set; } = null!; }
 public class TelefonoDetalleDto { public string Numero { get; set; } = null!; public string? Des { get; set; } }

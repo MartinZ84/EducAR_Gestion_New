@@ -8,7 +8,7 @@ public class DetalleBoletin
     public int IdDetalleBoletin { get; set; }
     public int IdBoletin { get; set; }
     public int IdMateria { get; set; }
-    public decimal CalificacionFinal { get; set; }
+    public decimal? CalificacionFinal { get; set; }
     public string? ConceptoFinal { get; set; }
     public bool Activo { get; set; } = true;
     public DateTime FechaCrea { get; set; } = DateTime.Now;

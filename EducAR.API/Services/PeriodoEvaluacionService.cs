@@ -89,7 +89,12 @@ public class PeriodoEvaluacionService : IPeriodoEvaluacionService
         if (await _periodoRepository.ExisteNombre(dto.Nombre, idCicloLectivo, idPeriodo))
             return (false, $"Ya existe un período llamado '{dto.Nombre}' en este ciclo lectivo.");
 
-        periodo.Nombre      = dto.Nombre;
+        if (!dto.Activo && await _periodoRepository.TieneDependencias(idPeriodo))
+            return (false, "No se puede dar de baja el período porque tiene evaluaciones, calificaciones o boletines asociados.");
+        if (await _periodoRepository.TieneEvaluacionesFueraDeFechas(idPeriodo, dto.FechaInicio, dto.FechaFin))
+            return (false, "Las fechas dejarían evaluaciones existentes fuera del período.");
+
+        periodo.Nombre      = dto.Nombre.Trim();
         periodo.FechaInicio = dto.FechaInicio;
         periodo.FechaFin    = dto.FechaFin;
         periodo.Activo      = dto.Activo;

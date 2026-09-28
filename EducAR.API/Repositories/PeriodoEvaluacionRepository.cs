@@ -52,6 +52,15 @@ public class PeriodoEvaluacionRepository : IPeriodoEvaluacionRepository
         return periodo;
     }
 
+    public async Task<bool> TieneDependencias(int idPeriodo) =>
+        await TieneCalificaciones(idPeriodo) ||
+        await _context.Evaluaciones.AnyAsync(e => e.IdPeriodoEvaluacion == idPeriodo && e.Activo) ||
+        await _context.Boletines.AnyAsync(b => b.IdPeriodoEvaluacion == idPeriodo);
+
+    public Task<bool> TieneEvaluacionesFueraDeFechas(int idPeriodo, DateTime inicio, DateTime fin) =>
+        _context.Evaluaciones.AnyAsync(e => e.IdPeriodoEvaluacion == idPeriodo && e.Activo &&
+            (e.Fecha < inicio.Date || e.Fecha >= fin.Date.AddDays(1)));
+
     public async Task<bool> Actualizar(PeriodoEvaluacion periodo)
     {
         periodo.FechaAct = DateTime.Now;
@@ -66,8 +75,8 @@ public class PeriodoEvaluacionRepository : IPeriodoEvaluacionRepository
         if (periodo is null)
             return (false, "Período de evaluación no encontrado.");
 
-        if (await TieneCalificaciones(idPeriodo))
-            return (false, "No se puede eliminar el período porque tiene calificaciones registradas.");
+        if (await TieneDependencias(idPeriodo))
+            return (false, "No se puede dar de baja el período porque tiene evaluaciones, calificaciones o boletines asociados.");
 
         periodo.Activo = false;
         periodo.FechaAct = DateTime.Now;

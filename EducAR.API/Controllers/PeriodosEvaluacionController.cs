@@ -59,7 +59,7 @@ public class PeriodosEvaluacionController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var (exito, mensaje) = await _periodoService.Actualizar(id, idCicloLectivo, IdEscuelaActual, dto);
-        if (!exito) return NotFound(new { mensaje });
+        if (!exito) return BadRequest(new { mensaje });
 
         return Ok(new { mensaje });
     }

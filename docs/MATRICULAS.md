@@ -1,5 +1,7 @@
 # Implementación de Matrículas
 
+> Documento histórico de la incorporación de matrículas. Para el comportamiento actual, consultar [Matrículas: funcionalidades, roles y reglas](Matriculas-funcional.md) y el [índice de documentación](README.md). Los nombres de campos y las instrucciones de recreación de base que siguen corresponden a esa implementación original; no son un requisito de operación actual. La limitación conocida del historial de migraciones está en [Limitaciones actuales](Limitaciones-actuales.md).
+
 ## Objetivo
 
 Se reemplaza la relación técnica `AlumnoCurso` por la entidad de negocio `Matricula`.

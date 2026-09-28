@@ -50,6 +50,9 @@ public class BoletinRepository : IBoletinRepository
 
     public async Task<Boletin> Crear(Boletin boletin)
     {
+        await using var transaccion = _context.Database.IsRelational()
+            ? await _context.Database.BeginTransactionAsync()
+            : null;
         // Separamos los detalles para insertarlos después
         var detalles = boletin.DetallesBoletines.ToList();
         boletin.DetallesBoletines = new List<DetalleBoletin>();
@@ -66,31 +69,30 @@ public class BoletinRepository : IBoletinRepository
 
         _context.DetallesBoletines.AddRange(detalles);
         await _context.SaveChangesAsync();
+        if (transaccion is not null) await transaccion.CommitAsync();
 
         // Recargamos el boletín completo con los detalles
         return (await ObtenerPorId(boletin.IdBoletin))!;
     }
-    public async Task<bool> Actualizar(Boletin boletin)
+    public async Task<bool> Actualizar(Boletin boletin, bool reemplazarDetalles = false)
     {
         boletin.FechaAct = DateTime.Now;
+        await using var transaccion = _context.Database.IsRelational()
+            ? await _context.Database.BeginTransactionAsync()
+            : null;
 
-        // Eliminar detalles viejos y reemplazar por los nuevos
-        var detallesViejos = await _context.DetallesBoletines
-            .Where(d => d.IdBoletin == boletin.IdBoletin)
-            .ToListAsync();
-
-        _context.DetallesBoletines.RemoveRange(detallesViejos);
-        await _context.SaveChangesAsync();
-
-        var detallesNuevos = boletin.DetallesBoletines.ToList();
-        foreach (var detalle in detallesNuevos)
+        if (reemplazarDetalles)
         {
-            detalle.IdBoletin = boletin.IdBoletin;
+            var detallesViejos = await _context.DetallesBoletines
+                .Where(d => d.IdBoletin == boletin.IdBoletin)
+                .ToListAsync();
+            _context.DetallesBoletines.RemoveRange(detallesViejos);
+            foreach (var detalle in boletin.DetallesBoletines)
+                detalle.IdBoletin = boletin.IdBoletin;
         }
 
-        _context.DetallesBoletines.AddRange(detallesNuevos);
-        _context.Boletines.Update(boletin);
         var filas = await _context.SaveChangesAsync();
+        if (transaccion is not null) await transaccion.CommitAsync();
         return filas > 0;
     }
 }

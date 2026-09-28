@@ -95,6 +95,7 @@ public class CalificacionService : ICalificacionService
             if (existente is not null)
             {
                 existente.ValorCalificacion = item.ValorCalificacion;
+                existente.GeneradaPorEvaluaciones = false;
                 existente.Observacion       = item.Observacion;
                 existente.Fecha             = DateTime.Now;
                 existente.FechaAct          = DateTime.Now;

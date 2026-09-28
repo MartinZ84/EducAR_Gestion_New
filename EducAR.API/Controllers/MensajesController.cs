@@ -65,7 +65,7 @@ public class MensajesController : ControllerBase
     }
 
     [HttpGet("destinatarios")]
-    [Authorize(Roles = "Docente,Tutor")]
+    [Authorize(Roles = "Administrador,Docente,Tutor")]
     public async Task<IActionResult> ObtenerDestinatarios()
     {
         return Ok(await _mensajeService.ObtenerDestinatarios(IdUsuarioActual, IdEscuelaActual));
@@ -82,7 +82,7 @@ public class MensajesController : ControllerBase
 
     // POST api/mensajes
     [HttpPost]
-    [Authorize(Roles = "Docente,Tutor")]
+    [Authorize(Roles = "Administrador,Docente,Tutor")]
     public async Task<IActionResult> Enviar([FromBody] MensajeCreateDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
